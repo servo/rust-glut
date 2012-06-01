@@ -1,0 +1,11 @@
+#[link(name = "glut",
+       vers = "0.1")];
+#[crate_type = "lib"];
+
+use std;
+
+mod glut;
+
+#[cfg(test)]
+mod test;
+
