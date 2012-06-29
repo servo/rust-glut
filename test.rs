@@ -1,4 +1,4 @@
-use opengles;
+use glut;   // FIXME: Should only be for tests.
 import glut::{init};
 import glut::bindgen::{glutInitDisplayMode, glutMainLoop, glutSwapBuffers};
 import opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};

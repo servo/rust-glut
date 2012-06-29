@@ -4,6 +4,7 @@ import bindgen::{glutCreateWindow, glutDisplayFunc, glutInit};
 import libc::*;
 import ptr::{addr_of, null};
 import str::bytes;
+import task::{local_data_get, local_data_set};
 import unsafe::reinterpret_cast;
 import vec::unsafe::to_ptr;
 
@@ -30,7 +31,7 @@ type GLint = i32;
 type GLfloat = f32;
 type GLdouble = f64;
 
-fn destroy<T>(-_value: [T]) {
+fn destroy<T>(-_value: [T]/~) {
     // let it drop
 }
 
@@ -50,8 +51,18 @@ fn create_window(name: str) unsafe {
     glutCreateWindow(to_ptr(bytes) as *c_char);
 }
 
-fn display_func(callback: *u8) unsafe {
-    glutDisplayFunc(callback);
+fn display_callback_tls_key(+_callback: @fn@()) {
+    // Empty.
+}
+
+crust fn display_callback() unsafe {
+    let callback = local_data_get(display_callback_tls_key).get();
+    (*callback)();
+}
+
+fn display_func(callback: fn@()) unsafe {
+    local_data_set(display_callback_tls_key, @callback);
+    glutDisplayFunc(display_callback);
 }
 
 #[nolink]
