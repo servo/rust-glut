@@ -120,7 +120,7 @@ fn draw_scene(shader_program: shader_program, vertex_buffer: GLuint) {
     draw_arrays(TRIANGLE_STRIP, 0 as GLint, 3 as GLint);
 }
 
-crust fn display_callback() {
+extern fn display_callback() {
     let program = init_shaders();
     let vertex_buffer = init_buffers();
     draw_scene(program, vertex_buffer);

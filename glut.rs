@@ -55,7 +55,7 @@ fn display_callback_tls_key(+_callback: @fn@()) {
     // Empty.
 }
 
-crust fn display_callback() unsafe {
+extern fn display_callback() unsafe {
     let callback = local_data_get(display_callback_tls_key).get();
     (*callback)();
 }
@@ -65,9 +65,19 @@ fn display_func(callback: fn@()) unsafe {
     glutDisplayFunc(display_callback);
 }
 
+#[cfg(target_os="macos")]
 #[nolink]
 #[link_args="-framework GLUT"]
-native mod bindgen {
+extern mod dummy {
+}
+
+#[cfg(target_os="linux")]
+#[link_name="glut"]
+extern mod dummy {
+}
+
+#[nolink]
+extern mod bindgen {
 
 fn glutInit(++argcp: *c_int, ++argv: **c_char);
 
