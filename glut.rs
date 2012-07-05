@@ -72,7 +72,7 @@ extern mod dummy {
 }
 
 #[cfg(target_os="linux")]
-#[link_name="glut"]
+#[link_name="GLUT"]
 extern mod dummy {
 }
 

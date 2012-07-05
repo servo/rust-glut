@@ -19,7 +19,7 @@ librustglut.dummy: glut.rc $(RUST_SRC)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@
 	touch $@
 
-glut-test: glut.rc $(RUST_SRC)
+rustglut-test: glut.rc $(RUST_SRC)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 check: rustglut-test

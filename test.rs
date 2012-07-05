@@ -1,4 +1,4 @@
-use glut;   // FIXME: Should only be for tests.
+use opengles;   // FIXME: Should only be for tests.
 import glut::{init};
 import glut::bindgen::{glutInitDisplayMode, glutMainLoop, glutSwapBuffers};
 import opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
@@ -48,7 +48,7 @@ fn vertex_shader_source() -> str {
 
 fn load_shader(source_str: str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, [bytes(source_str)]);
+    shader_source(shader_id, ~[bytes(source_str)]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
@@ -101,7 +101,7 @@ fn init_shaders() -> shader_program {
 fn init_buffers() -> GLuint {
     let triangle_vertex_buffer = gen_buffers(1 as GLsizei)[0];
     bind_buffer(ARRAY_BUFFER, triangle_vertex_buffer);
-    let vertices = [
+    let vertices = ~[
         0.0f32, 1.0f32, 0.0f32,
         1.0f32, 0.0f32, 0.0f32,
         0.0f32, 0.0f32, 0.0f32
@@ -120,7 +120,7 @@ fn draw_scene(shader_program: shader_program, vertex_buffer: GLuint) {
     draw_arrays(TRIANGLE_STRIP, 0 as GLint, 3 as GLint);
 }
 
-extern fn display_callback() {
+fn display_callback() {
     let program = init_shaders();
     let vertex_buffer = init_buffers();
     draw_scene(program, vertex_buffer);
@@ -132,16 +132,14 @@ extern fn display_callback() {
 fn test_triangle_and_square() unsafe {
     let builder = builder();
     let opts = {
-        sched: some({ mode: task::osmain, native_stack_size: none })
+        sched: some({ mode: task::osmain, foreign_stack_size: none })
         with get_opts(builder)
     };
     set_opts(builder, opts);
 
     let port: port<()> = port();
     let chan = chan(port);
-    let _result_ch: chan<()> = run_listener(builder, {
-        |_port|
-
+    let _result_ch: chan<()> = run_listener(builder, |_port| {
         init();
         glutInitDisplayMode(0 as c_uint);
         create_window("Rust GLUT");
