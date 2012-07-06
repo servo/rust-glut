@@ -1,6 +1,5 @@
 use opengles;   // FIXME: Should only be for tests.
-import glut::{init};
-import glut::bindgen::{glutInitDisplayMode, glutMainLoop, glutSwapBuffers};
+import glut::{check_loop, create_window, destroy_window, init, init_display_mode, swap_buffers};
 import opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
 import opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
 import opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLclampf, GLenum};
@@ -13,7 +12,7 @@ import opengles::gl2::{get_shader_info_log, get_shader_iv};
 import opengles::gl2::{get_uniform_location, link_program, shader_source};
 import opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-import comm::{chan, port, recv, send};
+import comm::{chan, peek, port, recv, send};
 import io::println;
 import ptr::{addr_of, null};
 import str::bytes;
@@ -125,7 +124,7 @@ fn display_callback() {
     let vertex_buffer = init_buffers();
     draw_scene(program, vertex_buffer);
 
-    glutSwapBuffers();
+    swap_buffers();
 }
 
 #[test]
@@ -137,17 +136,30 @@ fn test_triangle_and_square() unsafe {
     };
     set_opts(builder, opts);
 
-    let port: port<()> = port();
-    let chan = chan(port);
+    let po: port<()> = port();
+    let ch = chan(po);
     let _result_ch: chan<()> = run_listener(builder, |_port| {
         init();
-        glutInitDisplayMode(0 as c_uint);
-        create_window("Rust GLUT");
+        init_display_mode(0 as c_uint);
+        let window = create_window("Rust GLUT");
         display_func(display_callback);
-        glutMainLoop();
 
-        send(chan, ());
+        let wakeup = port();
+        let wakeup_chan = chan(wakeup);
+        timer_func(1000, || send(wakeup_chan, ()));
+
+        loop {
+            check_loop();
+
+            if peek(wakeup) {
+                recv(wakeup);
+                send(ch, ());
+                destroy_window(window);
+                break;
+            }
+        }
     });
-    recv(port);
+
+    recv(po);
 }
 
