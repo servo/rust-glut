@@ -128,7 +128,7 @@ extern mod dummy {
 }
 
 #[cfg(target_os="linux")]
-#[link_name="GLUT"]
+#[link_name="glut"]
 extern mod dummy {
 }
 
@@ -200,10 +200,6 @@ fn glutFullScreen();
 fn glutSetCursor(++cursor: c_int);
 
 fn glutWarpPointer(++x: c_int, ++y: c_int);
-
-fn glutSurfaceTexture(++target: GLenum, ++internalformat: GLenum, ++surfacewin: c_int);
-
-fn glutWMCloseFunc(++func: *u8);
 
 fn glutEstablishOverlay();
 
