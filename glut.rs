@@ -37,7 +37,7 @@ enum Window = c_int;
 
 const DOUBLE: c_uint = 2 as c_uint;
 
-fn destroy<T>(-_value: [T]/~) {
+fn destroy<T>(-_value: ~[T]) {
     // let it drop
 }
 
