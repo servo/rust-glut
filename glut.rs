@@ -44,7 +44,7 @@ fn destroy<T>(-_value: ~[T]) {
 
 fn init() unsafe {
     let argc = 0 as c_int;
-    let command = bytes("glut");
+    let command = bytes(~"glut");
     let argv: (*u8, *u8) = (to_ptr(command), null());
     let argv_p = reinterpret_cast(addr_of(argv));
 
@@ -53,7 +53,7 @@ fn init() unsafe {
     destroy(command);
 }
 
-fn create_window(name: str) -> Window unsafe {
+fn create_window(name: ~str) -> Window unsafe {
     let bytes = str::bytes(name);
     ret Window(glutCreateWindow(to_ptr(bytes) as *c_char));
 }

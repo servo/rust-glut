@@ -19,8 +19,8 @@ import str::bytes;
 import task::{builder, get_opts, run_listener, set_opts};
 import vec::unsafe::to_ptr;
 
-fn fragment_shader_source() -> str {
-    "
+fn fragment_shader_source() -> ~str {
+    ~"
     #ifdef GLES2
         precision mediump float;
     #endif
@@ -31,8 +31,8 @@ fn fragment_shader_source() -> str {
     "
 }
 
-fn vertex_shader_source() -> str {
-    "
+fn vertex_shader_source() -> ~str {
+    ~"
         attribute vec3 aVertexPosition;
 
         /*uniform mat4 uMVMatrix;
@@ -45,19 +45,19 @@ fn vertex_shader_source() -> str {
     "
 }
 
-fn load_shader(source_str: str, shader_type: GLenum) -> GLuint {
+fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
     shader_source(shader_id, ~[bytes(source_str)]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
         println(#fmt("error: %d", get_error() as int));
-        fail "failed to compile shader with error";
+        fail ~"failed to compile shader with error";
     }
 
     if get_shader_iv(shader_id, COMPILE_STATUS) == (0 as GLint) {
         println(get_shader_info_log(shader_id));
-        fail "failed to compile shader";
+        fail ~"failed to compile shader";
     }
     ret shader_id;
 }
@@ -70,7 +70,7 @@ class shader_program {
 
     new(program: GLuint) {
         self.program = program;
-        self.aVertexPosition = get_attrib_location(program, "aVertexPosition");
+        self.aVertexPosition = get_attrib_location(program, ~"aVertexPosition");
         /*self.uPMatrix = get_uniform_location(program, "uPMatrix");
         self.uMVMatrix = get_uniform_location(program, "uMVMatrix");*/
 
@@ -89,7 +89,7 @@ fn init_shaders() -> shader_program {
     link_program(program);
 
     if get_program_iv(program, LINK_STATUS) == (0 as GLint) {
-        fail "failed to initialize program";
+        fail ~"failed to initialize program";
     }
 
     use_program(program);
@@ -141,7 +141,7 @@ fn test_triangle_and_square() unsafe {
     let _result_ch: chan<()> = run_listener(builder, |_port| {
         init();
         init_display_mode(0 as c_uint);
-        let window = create_window("Rust GLUT");
+        let window = create_window(~"Rust GLUT");
         display_func(display_callback);
 
         let wakeup = port();
