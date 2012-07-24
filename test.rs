@@ -16,7 +16,7 @@ import comm::{chan, peek, port, recv, send};
 import io::println;
 import ptr::{addr_of, null};
 import str::bytes;
-import task::{task_builder, get_opts, run_listener, set_opts};
+import task::task_builder;
 import vec::unsafe::to_ptr;
 
 fn fragment_shader_source() -> ~str {
