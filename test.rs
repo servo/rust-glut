@@ -16,7 +16,7 @@ import comm::{chan, peek, port, recv, send};
 import io::println;
 import ptr::{addr_of, null};
 import str::bytes;
-import task::{builder, get_opts, run_listener, set_opts};
+import task::{task_builder, get_opts, run_listener, set_opts};
 import vec::unsafe::to_ptr;
 
 fn fragment_shader_source() -> ~str {
@@ -129,16 +129,11 @@ fn display_callback() {
 
 #[test]
 fn test_triangle_and_square() unsafe {
-    let builder = builder();
-    let opts = {
-        sched: some({ mode: task::osmain, foreign_stack_size: none })
-        with get_opts(builder)
-    };
-    set_opts(builder, opts);
+    let builder = task::task().sched_mode(task::osmain);
 
     let po: port<()> = port();
     let ch = chan(po);
-    let _result_ch: chan<()> = run_listener(builder, |_port| {
+    let _result_ch: chan<()> = builder.spawn_listener(|_port| {
         init();
         init_display_mode(0 as c_uint);
         let window = create_window(~"Rust GLUT");
