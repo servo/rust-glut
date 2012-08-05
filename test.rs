@@ -59,7 +59,7 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
         println(get_shader_info_log(shader_id));
         fail ~"failed to compile shader";
     }
-    ret shader_id;
+    return shader_id;
 }
 
 class shader_program {
@@ -94,7 +94,7 @@ fn init_shaders() -> shader_program {
 
     use_program(program);
 
-    ret shader_program(program);
+    return shader_program(program);
 }
 
 fn init_buffers() -> GLuint {
@@ -106,7 +106,7 @@ fn init_buffers() -> GLuint {
         0.0f32, 0.0f32, 0.0f32
     ];
     buffer_data(ARRAY_BUFFER, vertices, STATIC_DRAW);
-    ret triangle_vertex_buffer;
+    return triangle_vertex_buffer;
 }
 
 fn draw_scene(shader_program: shader_program, vertex_buffer: GLuint) {
