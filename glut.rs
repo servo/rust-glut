@@ -55,7 +55,7 @@ fn init() unsafe {
 
 fn create_window(name: ~str) -> Window unsafe {
     let bytes = str::bytes(name);
-    ret Window(glutCreateWindow(to_ptr(bytes) as *c_char));
+    return Window(glutCreateWindow(to_ptr(bytes) as *c_char));
 }
 
 fn destroy_window(window: Window) unsafe {
