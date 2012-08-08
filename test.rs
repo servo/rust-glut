@@ -129,7 +129,7 @@ fn display_callback() {
 
 #[test]
 fn test_triangle_and_square() unsafe {
-    let builder = task::task().sched_mode(task::osmain);
+    let builder = task::task().sched_mode(task::platform_thread);
 
     let po: port<()> = port();
     let ch = chan(po);

@@ -94,7 +94,7 @@ extern fn timer_callback(index: int) unsafe {
 
 fn timer_func(msecs: u32, callback: fn@()) unsafe {
     let callbacks;
-    alt local_data_get(timer_callback_tls_key) {
+    match local_data_get(timer_callback_tls_key) {
         none => {
             callbacks = @dvec();
             local_data_set(timer_callback_tls_key, copy callbacks);
