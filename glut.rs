@@ -4,7 +4,7 @@ import bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutGetWi
 import bindgen::{glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc, glutReshapeWindow};
 import bindgen::{glutSetWindow, glutSwapBuffers, glutTimerFunc};
 import libc::*;
-import dvec::{dvec, extensions};
+import dvec::dvec;
 import ptr::{addr_of, null};
 import str::bytes;
 import task::{local_data_get, local_data_set};
