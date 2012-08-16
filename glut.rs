@@ -4,7 +4,7 @@ import bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutGetWi
 import bindgen::{glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc, glutReshapeWindow};
 import bindgen::{glutSetWindow, glutSwapBuffers, glutTimerFunc};
 import libc::*;
-import dvec::dvec;
+import dvec::{DVec, dvec};
 import ptr::{addr_of, null};
 import str::bytes;
 import task::{local_data_get, local_data_set};
@@ -83,7 +83,7 @@ fn display_func(callback: fn@()) unsafe {
     glutDisplayFunc(display_callback);
 }
 
-fn timer_callback_tls_key(+_callback: @dvec<fn@()>) {
+fn timer_callback_tls_key(+_callback: @DVec<fn@()>) {
     // Empty.
 }
 
