@@ -12,11 +12,11 @@ import opengles::gl2::{get_shader_info_log, get_shader_iv};
 import opengles::gl2::{get_uniform_location, link_program, shader_source};
 import opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-import comm::{chan, peek, port, recv, send};
+import comm::{chan, peek, port, recv, send, Chan, Port};
 import io::println;
 import ptr::{addr_of, null};
 import str::bytes;
-import task::task_builder;
+import task::TaskBuilder;
 import vec::unsafe::to_ptr;
 
 fn fragment_shader_source() -> ~str {
@@ -129,11 +129,11 @@ fn display_callback() {
 
 #[test]
 fn test_triangle_and_square() unsafe {
-    let builder = task::task().sched_mode(task::platform_thread);
+    let builder = task::task().sched_mode(task::PlatformThread);
 
-    let po: port<()> = port();
+    let po: Port<()> = port();
     let ch = chan(po);
-    let _result_ch: chan<()> = builder.spawn_listener(|_port| {
+    let _result_ch: Chan<()> = builder.spawn_listener(|_port| {
         init();
         init_display_mode(0 as c_uint);
         let window = create_window(~"Rust GLUT");
