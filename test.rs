@@ -62,7 +62,7 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     return shader_id;
 }
 
-class shader_program {
+struct shader_program {
     let program: GLuint;
     let aVertexPosition: c_int;
     /*let uPMatrix: c_int;
