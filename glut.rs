@@ -6,7 +6,7 @@ import bindgen::{glutSetWindow, glutSwapBuffers, glutTimerFunc};
 import libc::*;
 import dvec::{DVec, dvec};
 import ptr::{addr_of, null};
-import str::bytes;
+import str::to_bytes;
 import task::{local_data_get, local_data_set};
 import unsafe::reinterpret_cast;
 import vec::unsafe::to_ptr;
@@ -44,7 +44,7 @@ fn destroy<T>(-_value: ~[T]) {
 
 fn init() unsafe {
     let argc = 0 as c_int;
-    let command = bytes(~"glut");
+    let command = to_bytes(~"glut");
     let argv: (*u8, *u8) = (to_ptr(command), null());
     let argv_p = reinterpret_cast(addr_of(argv));
 
@@ -54,7 +54,7 @@ fn init() unsafe {
 }
 
 fn create_window(name: ~str) -> Window unsafe {
-    let bytes = str::bytes(name);
+    let bytes = to_bytes(name);
     return Window(glutCreateWindow(to_ptr(bytes) as *c_char));
 }
 
