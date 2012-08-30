@@ -4,7 +4,7 @@ import bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutGetWi
 import bindgen::{glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc, glutReshapeWindow};
 import bindgen::{glutSetWindow, glutSwapBuffers, glutTimerFunc};
 import libc::*;
-import dvec::{DVec, dvec};
+import dvec::DVec;
 import ptr::{addr_of, null};
 import str::to_bytes;
 import task::{local_data_get, local_data_set};
@@ -95,11 +95,11 @@ extern fn timer_callback(index: int) unsafe {
 fn timer_func(msecs: u32, callback: fn@()) unsafe {
     let callbacks;
     match local_data_get(timer_callback_tls_key) {
-        none => {
-            callbacks = @dvec();
+        None => {
+            callbacks = @DVec();
             local_data_set(timer_callback_tls_key, copy callbacks);
         }
-        some(existing_callbacks) => {
+        Some(existing_callbacks) => {
             callbacks = existing_callbacks;
         }
     }
@@ -118,7 +118,7 @@ extern fn reshape_callback(++width: c_int, ++height: c_int) unsafe {
     (*callback)(width, height);
 }
 
-fn reshape_func(window: Window, callback: fn@(++c_int, ++c_int)) unsafe {
+fn reshape_func(_window: Window, callback: fn@(++c_int, ++c_int)) unsafe {
     local_data_set(reshape_callback_tls_key, @callback);
     glutReshapeFunc(reshape_callback);
 }
