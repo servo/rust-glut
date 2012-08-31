@@ -12,10 +12,10 @@ import opengles::gl2::{get_shader_info_log, get_shader_iv};
 import opengles::gl2::{get_uniform_location, link_program, shader_source};
 import opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-import comm::{chan, peek, port, recv, send, Chan, Port};
+import comm::{Chan, peek, Port, recv, send};
 import io::println;
 import ptr::{addr_of, null};
-import str::bytes;
+import str::to_bytes;
 import task::TaskBuilder;
 import vec::unsafe::to_ptr;
 
@@ -47,7 +47,7 @@ fn vertex_shader_source() -> ~str {
 
 fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, ~[bytes(source_str)]);
+    shader_source(shader_id, ~[to_bytes(source_str)]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
@@ -131,16 +131,16 @@ fn display_callback() {
 fn test_triangle_and_square() unsafe {
     let builder = task::task().sched_mode(task::PlatformThread);
 
-    let po: Port<()> = port();
-    let ch = chan(po);
+    let po: Port<()> = Port();
+    let ch = Chan(po);
     let _result_ch: Chan<()> = builder.spawn_listener(|_port| {
         init();
         init_display_mode(0 as c_uint);
         let window = create_window(~"Rust GLUT");
         display_func(display_callback);
 
-        let wakeup = port();
-        let wakeup_chan = chan(wakeup);
+        let wakeup = Port();
+        let wakeup_chan = Chan(wakeup);
         timer_func(1000, || send(wakeup_chan, ()));
 
         loop {
