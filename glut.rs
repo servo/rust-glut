@@ -46,7 +46,7 @@ fn init() unsafe {
     let argc = 0 as c_int;
     let command = to_bytes(~"glut");
     let argv: (*u8, *u8) = (to_ptr(command), null());
-    let argv_p = reinterpret_cast(addr_of(argv));
+    let argv_p = reinterpret_cast(&addr_of(argv));
 
     glutInit(addr_of(argc), argv_p);
 
