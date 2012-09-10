@@ -62,23 +62,24 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     return shader_id;
 }
 
-struct shader_program {
-    let program: GLuint;
-    let aVertexPosition: c_int;
+struct ShaderProgram {
+    program: GLuint,
+    aVertexPosition: c_int,
     /*let uPMatrix: c_int;
     let uMVMatrix: c_int;*/
-
-    new(program: GLuint) {
-        self.program = program;
-        self.aVertexPosition = get_attrib_location(program, ~"aVertexPosition");
-        /*self.uPMatrix = get_uniform_location(program, "uPMatrix");
-        self.uMVMatrix = get_uniform_location(program, "uMVMatrix");*/
-
-        enable_vertex_attrib_array(self.aVertexPosition as GLuint);
-    }
 }
 
-fn init_shaders() -> shader_program {
+fn ShaderProgram(program: GLuint) -> ShaderProgram {
+    let p = ShaderProgram {
+        program : program,
+        aVertexPosition : get_attrib_location(program, ~"aVertexPosition"),
+        /*self.uPMatrix : get_uniform_location(program, "uPMatrix"),
+        self.uMVMatrix : get_uniform_location(program, "uMVMatrix")*/
+    };
+    enable_vertex_attrib_array(p.aVertexPosition as GLuint);
+}
+
+fn init_shaders() -> ShaderProgram {
     let vertex_shader = load_shader(vertex_shader_source(), VERTEX_SHADER);
     let fragment_shader = load_shader(fragment_shader_source(),
                                       FRAGMENT_SHADER);
@@ -94,7 +95,7 @@ fn init_shaders() -> shader_program {
 
     use_program(program);
 
-    return shader_program(program);
+    return ShaderProgram(program);
 }
 
 fn init_buffers() -> GLuint {
@@ -109,12 +110,12 @@ fn init_buffers() -> GLuint {
     return triangle_vertex_buffer;
 }
 
-fn draw_scene(shader_program: shader_program, vertex_buffer: GLuint) {
+fn draw_scene(shader_program: ShaderProgram, vertex_buffer: GLuint) {
     clear_color(0.0f32, 0.0f32, 1.0f32, 1.0f32);
     clear(COLOR_BUFFER_BIT);
 
     bind_buffer(ARRAY_BUFFER, vertex_buffer);
-    vertex_attrib_pointer_f32(shader_program.aVertexPosition as GLuint,
+    vertex_attrib_pointer_f32(ShaderProgram.aVertexPosition as GLuint,
                               3 as GLint, false, 0 as GLsizei, 0 as GLuint);
     draw_arrays(TRIANGLE_STRIP, 0 as GLint, 3 as GLint);
 }
