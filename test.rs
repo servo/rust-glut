@@ -1,23 +1,23 @@
 use opengles;   // FIXME: Should only be for tests.
-import glut::{check_loop, create_window, destroy_window, init, init_display_mode, swap_buffers};
-import opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
-import opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
-import opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLclampf, GLenum};
-import opengles::gl2::{GLsizei, GLuint, attach_shader, bind_buffer};
-import opengles::gl2::{buffer_data, create_program, clear, clear_color};
-import opengles::gl2::{compile_shader, create_shader, draw_arrays};
-import opengles::gl2::{enable_vertex_attrib_array, gen_buffers};
-import opengles::gl2::{get_attrib_location, get_error, get_program_iv};
-import opengles::gl2::{get_shader_info_log, get_shader_iv};
-import opengles::gl2::{get_uniform_location, link_program, shader_source};
-import opengles::gl2::{use_program, vertex_attrib_pointer_f32};
+use glut::{check_loop, create_window, destroy_window, init, init_display_mode, swap_buffers};
+use opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
+use opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
+use opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLclampf, GLenum};
+use opengles::gl2::{GLsizei, GLuint, attach_shader, bind_buffer};
+use opengles::gl2::{buffer_data, create_program, clear, clear_color};
+use opengles::gl2::{compile_shader, create_shader, draw_arrays};
+use opengles::gl2::{enable_vertex_attrib_array, gen_buffers};
+use opengles::gl2::{get_attrib_location, get_error, get_program_iv};
+use opengles::gl2::{get_shader_info_log, get_shader_iv};
+use opengles::gl2::{get_uniform_location, link_program, shader_source};
+use opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-import comm::{Chan, peek, Port, recv, send};
-import io::println;
-import ptr::{addr_of, null};
-import str::to_bytes;
-import task::TaskBuilder;
-import vec::unsafe::to_ptr;
+use comm::{Chan, peek, Port, recv, send};
+use io::println;
+use ptr::{addr_of, null};
+use str::to_bytes;
+use task::TaskBuilder;
+use vec::unsafe::to_ptr;
 
 fn fragment_shader_source() -> ~str {
     ~"
