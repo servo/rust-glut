@@ -77,6 +77,7 @@ fn ShaderProgram(program: GLuint) -> ShaderProgram {
         self.uMVMatrix : get_uniform_location(program, "uMVMatrix")*/
     };
     enable_vertex_attrib_array(p.aVertexPosition as GLuint);
+    return p;
 }
 
 fn init_shaders() -> ShaderProgram {
@@ -115,7 +116,7 @@ fn draw_scene(shader_program: ShaderProgram, vertex_buffer: GLuint) {
     clear(COLOR_BUFFER_BIT);
 
     bind_buffer(ARRAY_BUFFER, vertex_buffer);
-    vertex_attrib_pointer_f32(ShaderProgram.aVertexPosition as GLuint,
+    vertex_attrib_pointer_f32(shader_program.aVertexPosition as GLuint,
                               3 as GLint, false, 0 as GLsizei, 0 as GLuint);
     draw_arrays(TRIANGLE_STRIP, 0 as GLint, 3 as GLint);
 }
