@@ -9,7 +9,7 @@ use ptr::{addr_of, null};
 use str::to_bytes;
 use task::{local_data_get, local_data_set};
 use unsafe::reinterpret_cast;
-use vec::unsafe::to_ptr;
+use vec::raw::to_ptr;
 
 /* FIXME: global variable glutStrokeRoman */
 
