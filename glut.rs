@@ -7,8 +7,8 @@ use libc::*;
 use dvec::DVec;
 use ptr::{addr_of, null};
 use str::to_bytes;
-use task::{local_data_get, local_data_set};
-use unsafe::reinterpret_cast;
+use task::local_data::{local_data_get, local_data_set};
+use cast::reinterpret_cast;
 use vec::raw::to_ptr;
 
 /* FIXME: global variable glutStrokeRoman */
