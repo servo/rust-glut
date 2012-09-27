@@ -109,7 +109,7 @@ fn timer_func(msecs: u32, callback: fn@()) unsafe {
     glutTimerFunc(msecs, timer_callback, index);
 }
 
-fn reshape_callback_tls_key(+_callback: @fn@(x: ++c_int, y: ++c_int)) {
+fn reshape_callback_tls_key(+_callback: @fn@(++x: c_int, ++y: c_int)) {
     // Empty.
 }
 
@@ -118,7 +118,7 @@ extern fn reshape_callback(++width: c_int, ++height: c_int) unsafe {
     (*callback)(width, height);
 }
 
-fn reshape_func(_window: Window, callback: fn@(++c_int, ++c_int)) unsafe {
+fn reshape_func(_window: Window, callback: fn@(++x: c_int, ++y: c_int)) unsafe {
     local_data_set(reshape_callback_tls_key, @callback);
     glutReshapeFunc(reshape_callback);
 }
