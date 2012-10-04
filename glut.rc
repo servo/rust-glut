@@ -4,8 +4,8 @@
 
 extern mod std;
 
-mod glut;
+pub mod glut;
 
 #[cfg(test)]
-mod test;
+pub mod test;
 
