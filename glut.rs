@@ -38,7 +38,7 @@ pub enum Window = c_int;
 
 pub const DOUBLE: c_uint = 2 as c_uint;
 
-pub fn destroy<T>(-_value: ~[T]) {
+pub fn destroy<T>(_value: ~[T]) {
     // let it drop
 }
 
@@ -69,7 +69,7 @@ pub fn reshape_window(window: Window, width: c_int, height: c_int) unsafe {
     glutSetWindow(current_window);
 }
 
-pub fn display_callback_tls_key(+_callback: @fn@()) {
+pub fn display_callback_tls_key(_callback: @fn@()) {
     // Empty.
 }
 
@@ -83,7 +83,7 @@ pub fn display_func(callback: fn@()) unsafe {
     glutDisplayFunc(display_callback);
 }
 
-pub fn timer_callback_tls_key(+_callback: @DVec<fn@()>) {
+pub fn timer_callback_tls_key(_callback: @DVec<fn@()>) {
     // Empty.
 }
 
@@ -109,7 +109,7 @@ pub fn timer_func(msecs: u32, callback: fn@()) unsafe {
     glutTimerFunc(msecs, timer_callback, index);
 }
 
-pub fn reshape_callback_tls_key(+_callback: @fn@(++x: c_int, ++y: c_int)) {
+pub fn reshape_callback_tls_key(_callback: @fn@(x: c_int, y: c_int)) {
     // Empty.
 }
 
@@ -118,7 +118,7 @@ pub extern fn reshape_callback(++width: c_int, ++height: c_int) unsafe {
     (*callback)(width, height);
 }
 
-pub fn reshape_func(_window: Window, callback: fn@(++x: c_int, ++y: c_int)) unsafe {
+pub fn reshape_func(_window: Window, callback: fn@(x: c_int, y: c_int)) unsafe {
     local_data_set(reshape_callback_tls_key, @callback);
     glutReshapeFunc(reshape_callback);
 }

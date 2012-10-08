@@ -1,4 +1,4 @@
-use opengles;   // FIXME: Should only be for tests.
+extern mod opengles;   // FIXME: Should only be for tests.
 use glut::{check_loop, create_window, destroy_window, init, init_display_mode, swap_buffers};
 use opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
 use opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
@@ -17,7 +17,7 @@ use io::println;
 use ptr::{addr_of, null};
 use str::to_bytes;
 use task::TaskBuilder;
-use vec::unsafe::to_ptr;
+use vec::raw::to_ptr;
 
 fn fragment_shader_source() -> ~str {
     ~"
