@@ -50,7 +50,7 @@ pub fn init() unsafe {
 
     glutInit(to_unsafe_ptr(&argc), argv_p);
 
-    destroy(command);
+    destroy(move command);
 }
 
 pub fn create_window(name: ~str) -> Window unsafe {
