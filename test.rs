@@ -134,15 +134,15 @@ fn test_triangle_and_square() unsafe {
     let builder = task::task().sched_mode(task::PlatformThread);
 
     let po: Port<()> = Port();
-    let ch = Chan(po);
+    let ch = Chan(&po);
     let _result_ch: Chan<()> = builder.spawn_listener(|_port| {
         init();
         init_display_mode(0 as c_uint);
         let window = create_window(~"Rust GLUT");
         display_func(display_callback);
 
-        let wakeup = Port();
-        let wakeup_chan = Chan(wakeup);
+        let wakeup: Port<()> = Port();
+        let wakeup_chan = Chan(&wakeup);
         timer_func(1000, || send(wakeup_chan, ()));
 
         loop {
