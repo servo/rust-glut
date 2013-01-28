@@ -50,116 +50,146 @@ pub fn destroy<T>(_value: ~[T]) {
     // let it drop
 }
 
-pub fn init() unsafe {
-    let argc = 0 as c_int;
-    let command = to_bytes(~"glut");
-    let argv: (*u8, *u8) = (to_ptr(command), null());
-    let argv_p = reinterpret_cast(&to_unsafe_ptr(&argv));
+pub fn init() {
+    unsafe {
+        let argc = 0 as c_int;
+        let command = to_bytes(~"glut");
+        let argv: (*u8, *u8) = (to_ptr(command), null());
+        let argv_p = reinterpret_cast(&to_unsafe_ptr(&argv));
 
-    glutInit(to_unsafe_ptr(&argc), argv_p);
+        glutInit(to_unsafe_ptr(&argc), argv_p);
 
-    destroy(move command);
+        destroy(move command);
+    }
 }
 
-pub fn create_window(name: ~str) -> Window unsafe {
-    let bytes = to_bytes(name);
-    return Window(glutCreateWindow(to_ptr(bytes) as *c_char));
+pub fn create_window(name: ~str) -> Window {
+    unsafe {
+        let bytes = to_bytes(name);
+        return Window(glutCreateWindow(to_ptr(bytes) as *c_char));
+    }
 }
 
-pub fn destroy_window(window: Window) unsafe {
-    glutDestroyWindow(*window);
+pub fn destroy_window(window: Window) {
+    unsafe {
+        glutDestroyWindow(*window);
+    }
 }
 
-pub fn reshape_window(window: Window, width: c_int, height: c_int) unsafe {
-    let current_window = glutGetWindow();
-    glutSetWindow(*window);
-    glutReshapeWindow(width, height);
-    glutSetWindow(current_window);
+pub fn reshape_window(window: Window, width: c_int, height: c_int) {
+    unsafe {
+        let current_window = glutGetWindow();
+        glutSetWindow(*window);
+        glutReshapeWindow(width, height);
+        glutSetWindow(current_window);
+    }
 }
 
 pub fn display_callback_tls_key(_callback: @@fn()) {
     // Empty.
 }
 
-pub extern fn display_callback() unsafe {
-    let callback = local_data_get(display_callback_tls_key).get();
-    (*callback)();
+pub extern fn display_callback() {
+    unsafe {
+        let callback = local_data_get(display_callback_tls_key).get();
+        (*callback)();
+    }
 }
 
-pub fn display_func(callback: @fn()) unsafe {
-    local_data_set(display_callback_tls_key, @callback);
-    glutDisplayFunc(display_callback);
+pub fn display_func(callback: @fn()) {
+    unsafe {
+        local_data_set(display_callback_tls_key, @callback);
+        glutDisplayFunc(display_callback);
+    }
 }
 
 pub fn timer_callback_tls_key(_callback: @DVec<@fn()>) {
     // Empty.
 }
 
-pub extern fn timer_callback(index: int) unsafe {
-    let callbacks = local_data_get(timer_callback_tls_key).get();
-    ((*callbacks)[index as uint])();
+pub extern fn timer_callback(index: int) {
+    unsafe {
+        let callbacks = local_data_get(timer_callback_tls_key).get();
+        ((*callbacks)[index as uint])();
+    }
 }
 
-pub fn timer_func(msecs: u32, callback: @fn()) unsafe {
-    let callbacks;
-    match local_data_get(timer_callback_tls_key) {
-        None => {
-            callbacks = @DVec();
-            local_data_set(timer_callback_tls_key, copy callbacks);
+pub fn timer_func(msecs: u32, callback: @fn()) {
+    unsafe {
+        let callbacks;
+        match local_data_get(timer_callback_tls_key) {
+            None => {
+                callbacks = @DVec();
+                local_data_set(timer_callback_tls_key, copy callbacks);
+            }
+            Some(existing_callbacks) => {
+                callbacks = existing_callbacks;
+            }
         }
-        Some(existing_callbacks) => {
-            callbacks = existing_callbacks;
-        }
-    }
 
-    callbacks.push(callback);
-    let index = (callbacks.len() - 1) as c_int;
-    glutTimerFunc(msecs, timer_callback, index);
+        callbacks.push(callback);
+        let index = (callbacks.len() - 1) as c_int;
+        glutTimerFunc(msecs, timer_callback, index);
+    }
 }
 
 pub fn reshape_callback_tls_key(_callback: @@fn(x: c_int, y: c_int)) {
     // Empty.
 }
 
-pub extern fn reshape_callback(++width: c_int, ++height: c_int) unsafe {
-    let callback = local_data_get(reshape_callback_tls_key).get();
-    (*callback)(width, height);
+pub extern fn reshape_callback(++width: c_int, ++height: c_int) {
+    unsafe {
+        let callback = local_data_get(reshape_callback_tls_key).get();
+        (*callback)(width, height);
+    }
 }
 
-pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) unsafe {
-    local_data_set(reshape_callback_tls_key, @callback);
-    glutReshapeFunc(reshape_callback);
+pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) {
+    unsafe {
+        local_data_set(reshape_callback_tls_key, @callback);
+        glutReshapeFunc(reshape_callback);
+    }
 }
 
 #[cfg(target_os="macos")]
-pub fn check_loop() unsafe {
-    ext::glutCheckLoop();
+pub fn check_loop() {
+    unsafe {
+        ext::glutCheckLoop();
+    }
 }
 
 #[cfg(target_os="linux")]
-pub fn check_loop() unsafe {
-    ext::glutMainLoopEvent();
+pub fn check_loop() {
+    unsafe {
+        ext::glutMainLoopEvent();
+    }
 }
 
-pub fn init_display_mode(mode: c_uint) unsafe {
-    glutInitDisplayMode(mode);
+pub fn init_display_mode(mode: c_uint) {
+    unsafe {
+        glutInitDisplayMode(mode);
+    }
 }
 
-pub fn swap_buffers() unsafe {
-    glutSwapBuffers();
+pub fn swap_buffers() {
+    unsafe {
+        glutSwapBuffers();
+    }
 }
 
-pub fn post_redisplay() unsafe {
-    glutPostRedisplay();
+pub fn post_redisplay() {
+    unsafe {
+        glutPostRedisplay();
+    }
 }
 
-pub fn get(state: State) -> c_int unsafe {
+pub fn get(state: State) -> c_int {
     let glut_state;
     match state {
         WindowWidth => glut_state = WINDOW_WIDTH,
         WindowHeight => glut_state = WINDOW_HEIGHT
     }
-    glutGet(glut_state)
+    unsafe { glutGet(glut_state) }
 }
 
 #[cfg(target_os="macos")]
