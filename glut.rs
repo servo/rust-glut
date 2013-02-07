@@ -50,7 +50,7 @@ pub fn destroy<T>(_value: ~[T]) {
     // let it drop
 }
 
-pub fn init() {
+pub fn init() { 
     unsafe {
         let argc = 0 as c_int;
         let command = to_bytes(~"glut");
@@ -137,7 +137,7 @@ pub fn reshape_callback_tls_key(_callback: @@fn(x: c_int, y: c_int)) {
     // Empty.
 }
 
-pub extern fn reshape_callback(++width: c_int, ++height: c_int) {
+pub extern fn reshape_callback(++width: c_int, ++height: c_int) {   
     unsafe {
         let callback = local_data_get(reshape_callback_tls_key).get();
         (*callback)(width, height);
@@ -184,12 +184,14 @@ pub fn post_redisplay() {
 }
 
 pub fn get(state: State) -> c_int {
-    let glut_state;
-    match state {
-        WindowWidth => glut_state = WINDOW_WIDTH,
-        WindowHeight => glut_state = WINDOW_HEIGHT
+    unsafe {
+        let glut_state;
+        match state {
+            WindowWidth => glut_state = WINDOW_WIDTH,
+            WindowHeight => glut_state = WINDOW_HEIGHT
+        }
+        glutGet(glut_state)
     }
-    unsafe { glutGet(glut_state) }
 }
 
 #[cfg(target_os="macos")]

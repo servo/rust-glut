@@ -53,12 +53,12 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
 
     if get_error() != NO_ERROR {
         println(fmt!("error: %d", get_error() as int));
-        fail ~"failed to compile shader with error";
+        fail!(~"failed to compile shader with error");
     }
 
     if get_shader_iv(shader_id, COMPILE_STATUS) == (0 as GLint) {
         println(get_shader_info_log(shader_id));
-        fail ~"failed to compile shader";
+        fail!(~"failed to compile shader");
     }
     return shader_id;
 }
@@ -92,7 +92,7 @@ fn init_shaders() -> ShaderProgram {
     link_program(program);
 
     if get_program_iv(program, LINK_STATUS) == (0 as GLint) {
-        fail ~"failed to initialize program";
+        fail!(~"failed to initialize program");
     }
 
     use_program(program);
