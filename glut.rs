@@ -59,7 +59,7 @@ pub fn init() {
 
         glutInit(to_unsafe_ptr(&argc), argv_p);
 
-        destroy(move command);
+        destroy(command);
     }
 }
 
