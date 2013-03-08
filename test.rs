@@ -12,8 +12,7 @@ use self::opengles::gl2::{get_shader_info_log, get_shader_iv};
 use self::opengles::gl2::{get_uniform_location, link_program, shader_source};
 use self::opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-use core::pipes::{Chan, Port};
-use core::pipes;
+use core::comm::{Chan, Port};
 use libc::{c_int, c_uint};
 use io::println;
 use ptr::{addr_of, null};
