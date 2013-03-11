@@ -3,13 +3,13 @@
 use glut::bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutGet, glutGetWindow};
 use glut::bindgen::{glutInit, glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc};
 use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSwapBuffers, glutTimerFunc};
-use libc::*;
-use dvec::DVec;
-use ptr::{null, to_unsafe_ptr};
-use str::to_bytes;
-use task::local_data::{local_data_get, local_data_set};
-use cast::reinterpret_cast;
-use vec::raw::to_ptr;
+use core::libc::*;
+use core::dvec::DVec;
+use core::ptr::{null, to_unsafe_ptr};
+use core::str::to_bytes;
+use core::task::local_data::{local_data_get, local_data_set};
+use core::cast::reinterpret_cast;
+use core::vec::raw::to_ptr;
 
 /* FIXME: global variable glutStrokeRoman */
 
