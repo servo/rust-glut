@@ -4,7 +4,6 @@ use glut::bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutGe
 use glut::bindgen::{glutInit, glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc};
 use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSwapBuffers, glutTimerFunc};
 use core::libc::*;
-use core::dvec::DVec;
 use core::ptr::{null, to_unsafe_ptr};
 use core::str::to_bytes;
 use core::task::local_data::{local_data_get, local_data_set};
@@ -34,7 +33,7 @@ pub type GLint = i32;
 pub type GLfloat = f32;
 pub type GLdouble = f64;
 
-pub enum Window = c_int;
+pub struct Window(c_int);
 
 pub const DOUBLE: c_uint = 2 as c_uint;
 
@@ -103,7 +102,7 @@ pub fn display_func(callback: @fn()) {
     }
 }
 
-pub fn timer_callback_tls_key(_callback: @DVec<@fn()>) {
+pub fn timer_callback_tls_key(_callback: @~[@fn()]) {
     // Empty.
 }
 
@@ -116,14 +115,14 @@ pub extern fn timer_callback(index: int) {
 
 pub fn timer_func(msecs: u32, callback: @fn()) {
     unsafe {
-        let callbacks;
+        let mut callbacks;
         match local_data_get(timer_callback_tls_key) {
             None => {
-                callbacks = @DVec();
-                local_data_set(timer_callback_tls_key, copy callbacks);
+                callbacks = @mut ~[];
+                local_data_set(timer_callback_tls_key, cast::transmute(copy callbacks));
             }
             Some(existing_callbacks) => {
-                callbacks = existing_callbacks;
+                callbacks = cast::transmute(existing_callbacks);
             }
         }
 
