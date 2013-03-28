@@ -35,10 +35,10 @@ pub type GLdouble = f64;
 
 pub struct Window(c_int);
 
-pub const DOUBLE: c_uint = 2 as c_uint;
+pub static DOUBLE: c_uint = 2 as c_uint;
 
-const WINDOW_WIDTH: GLenum = 102;
-const WINDOW_HEIGHT: GLenum = 103;
+static WINDOW_WIDTH: GLenum = 102;
+static WINDOW_HEIGHT: GLenum = 103;
 
 pub enum State {
     WindowWidth,
@@ -136,7 +136,7 @@ pub fn reshape_callback_tls_key(_callback: @@fn(x: c_int, y: c_int)) {
     // Empty.
 }
 
-pub extern fn reshape_callback(++width: c_int, ++height: c_int) {   
+pub extern fn reshape_callback(width: c_int, height: c_int) {
     unsafe {
         let callback = local_data_get(reshape_callback_tls_key).get();
         (*callback)(width, height);
