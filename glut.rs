@@ -84,6 +84,12 @@ pub fn destroy_window(window: Window) {
     }
 }
 
+pub fn set_window(window: Window) {
+    unsafe {
+        glutSetWindow(*window);
+    }
+}
+
 pub fn reshape_window(window: Window, width: c_int, height: c_int) {
     unsafe {
         let current_window = glutGetWindow();
