@@ -16,7 +16,7 @@ use core::libc::*;
 use core::ptr::{null, to_unsafe_ptr};
 use core::str::to_bytes;
 use core::task::local_data::{local_data_get, local_data_set};
-use core::cast::reinterpret_cast;
+use core::cast::transmute;
 use core::vec::raw::to_ptr;
 
 /* FIXME: global variable glutStrokeRoman */
@@ -63,7 +63,7 @@ pub fn init() {
         let argc = 0 as c_int;
         let command = to_bytes(~"glut");
         let argv: (*u8, *u8) = (to_ptr(command), null());
-        let argv_p = reinterpret_cast(&to_unsafe_ptr(&argv));
+        let argv_p = transmute(to_unsafe_ptr(&argv));
 
         glutInit(to_unsafe_ptr(&argc), argv_p);
 
