@@ -63,7 +63,7 @@ pub fn init() {
         let argc = 0 as c_int;
         let command = to_bytes(~"glut");
         let argv: (*u8, *u8) = (to_ptr(command), null());
-        let argv_p = transmute(&to_unsafe_ptr(&argv));
+        let argv_p = transmute(to_unsafe_ptr(&argv));
 
         glutInit(to_unsafe_ptr(&argc), argv_p);
 
