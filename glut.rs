@@ -184,11 +184,11 @@ pub extern fn timer_callback(index: int) {
 
 pub fn timer_func(msecs: u32, callback: @fn()) {
     unsafe {
-        let mut callbacks;
+        let callbacks;
         match local_data_get(timer_callback_tls_key) {
             None => {
                 callbacks = @mut ~[];
-                local_data_set(timer_callback_tls_key, cast::transmute(copy callbacks));
+                local_data_set(timer_callback_tls_key, cast::transmute(callbacks));
             }
             Some(existing_callbacks) => {
                 callbacks = cast::transmute(existing_callbacks);
