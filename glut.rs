@@ -15,7 +15,7 @@ use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSwapBuffers, glutTimer
 use core::libc::*;
 use core::ptr::{null, to_unsafe_ptr};
 use core::str::to_bytes;
-use core::task::local_data::{local_data_get, local_data_set};
+use core::local_data::{local_data_get, local_data_set};
 use core::cast::transmute;
 use core::vec::raw::to_ptr;
 
