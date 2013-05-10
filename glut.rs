@@ -184,11 +184,11 @@ pub extern fn timer_callback(index: int) {
 
 pub fn timer_func(msecs: u32, callback: @fn()) {
     unsafe {
-        let mut callbacks;
+        let callbacks;
         match local_data_get(timer_callback_tls_key) {
             None => {
                 callbacks = @mut ~[];
-                local_data_set(timer_callback_tls_key, cast::transmute(copy callbacks));
+                local_data_set(timer_callback_tls_key, cast::transmute(callbacks));
             }
             Some(existing_callbacks) => {
                 callbacks = cast::transmute(existing_callbacks);
@@ -290,41 +290,41 @@ pub extern mod ext {
 #[nolink]
 pub extern mod bindgen {
 
-pub fn glutInit(++argcp: *c_int, ++argv: **c_char);
+pub fn glutInit(argcp: *c_int, argv: **c_char);
 
-pub fn glutInitDisplayMode(++mode: c_uint);
+pub fn glutInitDisplayMode(mode: c_uint);
 
-pub fn glutInitDisplayString(++string: *c_char);
+pub fn glutInitDisplayString(string: *c_char);
 
-pub fn glutInitWindowPosition(++x: c_int, ++y: c_int);
+pub fn glutInitWindowPosition(x: c_int, y: c_int);
 
-pub fn glutInitWindowSize(++width: c_int, ++height: c_int);
+pub fn glutInitWindowSize(width: c_int, height: c_int);
 
 pub fn glutMainLoop();
 
-pub fn glutCreateWindow(++title: *c_char) -> c_int;
+pub fn glutCreateWindow(title: *c_char) -> c_int;
 
-pub fn glutCreateSubWindow(++win: c_int, ++x: c_int, ++y: c_int, ++width: c_int, ++height: c_int) -> c_int;
+pub fn glutCreateSubWindow(win: c_int, x: c_int, y: c_int, width: c_int, height: c_int) -> c_int;
 
-pub fn glutDestroyWindow(++win: c_int);
+pub fn glutDestroyWindow(win: c_int);
 
 pub fn glutPostRedisplay();
 
-pub fn glutPostWindowRedisplay(++win: c_int);
+pub fn glutPostWindowRedisplay(win: c_int);
 
 pub fn glutSwapBuffers();
 
 pub fn glutGetWindow() -> c_int;
 
-pub fn glutSetWindow(++win: c_int);
+pub fn glutSetWindow(win: c_int);
 
-pub fn glutSetWindowTitle(++title: *c_char);
+pub fn glutSetWindowTitle(title: *c_char);
 
-pub fn glutSetIconTitle(++title: *c_char);
+pub fn glutSetIconTitle(title: *c_char);
 
-pub fn glutPositionWindow(++x: c_int, ++y: c_int);
+pub fn glutPositionWindow(x: c_int, y: c_int);
 
-pub fn glutReshapeWindow(++width: c_int, ++height: c_int);
+pub fn glutReshapeWindow(width: c_int, height: c_int);
 
 pub fn glutPopWindow();
 
@@ -338,149 +338,149 @@ pub fn glutHideWindow();
 
 pub fn glutFullScreen();
 
-pub fn glutSetCursor(++cursor: c_int);
+pub fn glutSetCursor(cursor: c_int);
 
-pub fn glutWarpPointer(++x: c_int, ++y: c_int);
+pub fn glutWarpPointer(x: c_int, y: c_int);
 
 pub fn glutEstablishOverlay();
 
 pub fn glutRemoveOverlay();
 
-pub fn glutUseLayer(++layer: GLenum);
+pub fn glutUseLayer(layer: GLenum);
 
 pub fn glutPostOverlayRedisplay();
 
-pub fn glutPostWindowOverlayRedisplay(++win: c_int);
+pub fn glutPostWindowOverlayRedisplay(win: c_int);
 
 pub fn glutShowOverlay();
 
 pub fn glutHideOverlay();
 
-pub fn glutCreateMenu(++arg1: *u8) -> c_int;
+pub fn glutCreateMenu(arg1: *u8) -> c_int;
 
-pub fn glutDestroyMenu(++menu: c_int);
+pub fn glutDestroyMenu(menu: c_int);
 
 pub fn glutGetMenu() -> c_int;
 
-pub fn glutSetMenu(++menu: c_int);
+pub fn glutSetMenu(menu: c_int);
 
-pub fn glutAddMenuEntry(++label: *c_char, ++value: c_int);
+pub fn glutAddMenuEntry(label: *c_char, value: c_int);
 
-pub fn glutAddSubMenu(++label: *c_char, ++submenu: c_int);
+pub fn glutAddSubMenu(label: *c_char, submenu: c_int);
 
-pub fn glutChangeToMenuEntry(++item: c_int, ++label: *c_char, ++value: c_int);
+pub fn glutChangeToMenuEntry(item: c_int, label: *c_char, value: c_int);
 
-pub fn glutChangeToSubMenu(++item: c_int, ++label: *c_char, ++submenu: c_int);
+pub fn glutChangeToSubMenu(item: c_int, label: *c_char, submenu: c_int);
 
-pub fn glutRemoveMenuItem(++item: c_int);
+pub fn glutRemoveMenuItem(item: c_int);
 
-pub fn glutAttachMenu(++button: c_int);
+pub fn glutAttachMenu(button: c_int);
 
-pub fn glutDetachMenu(++button: c_int);
+pub fn glutDetachMenu(button: c_int);
 
-pub fn glutDisplayFunc(++func: *u8);
+pub fn glutDisplayFunc(func: *u8);
 
-pub fn glutReshapeFunc(++func: *u8);
+pub fn glutReshapeFunc(func: *u8);
 
-pub fn glutKeyboardFunc(++func: *u8);
+pub fn glutKeyboardFunc(func: *u8);
 
-pub fn glutMouseFunc(++func: *u8);
+pub fn glutMouseFunc(func: *u8);
 
-pub fn glutMotionFunc(++func: *u8);
+pub fn glutMotionFunc(func: *u8);
 
-pub fn glutPassiveMotionFunc(++func: *u8);
+pub fn glutPassiveMotionFunc(func: *u8);
 
-pub fn glutEntryFunc(++func: *u8);
+pub fn glutEntryFunc(func: *u8);
 
-pub fn glutVisibilityFunc(++func: *u8);
+pub fn glutVisibilityFunc(func: *u8);
 
-pub fn glutIdleFunc(++func: *u8);
+pub fn glutIdleFunc(func: *u8);
 
-pub fn glutTimerFunc(++millis: c_uint, ++func: *u8, ++value: c_int);
+pub fn glutTimerFunc(millis: c_uint, func: *u8, value: c_int);
 
-pub fn glutMenuStateFunc(++func: *u8);
+pub fn glutMenuStateFunc(func: *u8);
 
-pub fn glutSpecialFunc(++func: *u8);
+pub fn glutSpecialFunc(func: *u8);
 
-pub fn glutSpaceballMotionFunc(++func: *u8);
+pub fn glutSpaceballMotionFunc(func: *u8);
 
-pub fn glutSpaceballRotateFunc(++func: *u8);
+pub fn glutSpaceballRotateFunc(func: *u8);
 
-pub fn glutSpaceballButtonFunc(++func: *u8);
+pub fn glutSpaceballButtonFunc(func: *u8);
 
-pub fn glutButtonBoxFunc(++func: *u8);
+pub fn glutButtonBoxFunc(func: *u8);
 
-pub fn glutDialsFunc(++func: *u8);
+pub fn glutDialsFunc(func: *u8);
 
-pub fn glutTabletMotionFunc(++func: *u8);
+pub fn glutTabletMotionFunc(func: *u8);
 
-pub fn glutTabletButtonFunc(++func: *u8);
+pub fn glutTabletButtonFunc(func: *u8);
 
-pub fn glutMenuStatusFunc(++func: *u8);
+pub fn glutMenuStatusFunc(func: *u8);
 
-pub fn glutOverlayDisplayFunc(++func: *u8);
+pub fn glutOverlayDisplayFunc(func: *u8);
 
-pub fn glutWindowStatusFunc(++func: *u8);
+pub fn glutWindowStatusFunc(func: *u8);
 
-pub fn glutKeyboardUpFunc(++func: *u8);
+pub fn glutKeyboardUpFunc(func: *u8);
 
-pub fn glutSpecialUpFunc(++func: *u8);
+pub fn glutSpecialUpFunc(func: *u8);
 
-pub fn glutJoystickFunc(++func: *u8, ++pollInterval: c_int);
+pub fn glutJoystickFunc(func: *u8, pollInterval: c_int);
 
-pub fn glutSetColor(++arg1: c_int, ++red: GLfloat, ++green: GLfloat, ++blue: GLfloat);
+pub fn glutSetColor(arg1: c_int, red: GLfloat, green: GLfloat, blue: GLfloat);
 
-pub fn glutGetColor(++ndx: c_int, ++component: c_int) -> GLfloat;
+pub fn glutGetColor(ndx: c_int, component: c_int) -> GLfloat;
 
-pub fn glutCopyColormap(++win: c_int);
+pub fn glutCopyColormap(win: c_int);
 
-pub fn glutGet(++_type: GLenum) -> c_int;
+pub fn glutGet(_type: GLenum) -> c_int;
 
-pub fn glutDeviceGet(++_type: GLenum) -> c_int;
+pub fn glutDeviceGet(_type: GLenum) -> c_int;
 
-pub fn glutExtensionSupported(++name: *c_char) -> c_int;
+pub fn glutExtensionSupported(name: *c_char) -> c_int;
 
 pub fn glutGetModifiers() -> c_int;
 
-pub fn glutLayerGet(++_type: GLenum) -> c_int;
+pub fn glutLayerGet(_type: GLenum) -> c_int;
 
-pub fn glutGetProcAddress(++procName: *c_char) -> *c_void;
+pub fn glutGetProcAddress(procName: *c_char) -> *c_void;
 
-pub fn glutBitmapCharacter(++font: *c_void, ++character: c_int);
+pub fn glutBitmapCharacter(font: *c_void, character: c_int);
 
-pub fn glutBitmapWidth(++font: *c_void, ++character: c_int) -> c_int;
+pub fn glutBitmapWidth(font: *c_void, character: c_int) -> c_int;
 
-pub fn glutStrokeCharacter(++font: *c_void, ++character: c_int);
+pub fn glutStrokeCharacter(font: *c_void, character: c_int);
 
-pub fn glutStrokeWidth(++font: *c_void, ++character: c_int) -> c_int;
+pub fn glutStrokeWidth(font: *c_void, character: c_int) -> c_int;
 
-pub fn glutBitmapLength(++font: *c_void, ++string: *c_uchar) -> c_int;
+pub fn glutBitmapLength(font: *c_void, string: *c_uchar) -> c_int;
 
-pub fn glutStrokeLength(++font: *c_void, ++string: *c_uchar) -> c_int;
+pub fn glutStrokeLength(font: *c_void, string: *c_uchar) -> c_int;
 
-pub fn glutWireSphere(++radius: GLdouble, ++slices: GLint, ++stacks: GLint);
+pub fn glutWireSphere(radius: GLdouble, slices: GLint, stacks: GLint);
 
-pub fn glutSolidSphere(++radius: GLdouble, ++slices: GLint, ++stacks: GLint);
+pub fn glutSolidSphere(radius: GLdouble, slices: GLint, stacks: GLint);
 
-pub fn glutWireCone(++base: GLdouble, ++height: GLdouble, ++slices: GLint, ++stacks: GLint);
+pub fn glutWireCone(base: GLdouble, height: GLdouble, slices: GLint, stacks: GLint);
 
-pub fn glutSolidCone(++base: GLdouble, ++height: GLdouble, ++slices: GLint, ++stacks: GLint);
+pub fn glutSolidCone(base: GLdouble, height: GLdouble, slices: GLint, stacks: GLint);
 
-pub fn glutWireCube(++size: GLdouble);
+pub fn glutWireCube(size: GLdouble);
 
-pub fn glutSolidCube(++size: GLdouble);
+pub fn glutSolidCube(size: GLdouble);
 
-pub fn glutWireTorus(++innerRadius: GLdouble, ++outerRadius: GLdouble, ++sides: GLint, ++rings: GLint);
+pub fn glutWireTorus(innerRadius: GLdouble, outerRadius: GLdouble, sides: GLint, rings: GLint);
 
-pub fn glutSolidTorus(++innerRadius: GLdouble, ++outerRadius: GLdouble, ++sides: GLint, ++rings: GLint);
+pub fn glutSolidTorus(innerRadius: GLdouble, outerRadius: GLdouble, sides: GLint, rings: GLint);
 
 pub fn glutWireDodecahedron();
 
 pub fn glutSolidDodecahedron();
 
-pub fn glutWireTeapot(++size: GLdouble);
+pub fn glutWireTeapot(size: GLdouble);
 
-pub fn glutSolidTeapot(++size: GLdouble);
+pub fn glutSolidTeapot(size: GLdouble);
 
 pub fn glutWireOctahedron();
 
@@ -494,30 +494,30 @@ pub fn glutWireIcosahedron();
 
 pub fn glutSolidIcosahedron();
 
-pub fn glutVideoResizeGet(++param: GLenum) -> c_int;
+pub fn glutVideoResizeGet(param: GLenum) -> c_int;
 
 pub fn glutSetupVideoResizing();
 
 pub fn glutStopVideoResizing();
 
-pub fn glutVideoResize(++x: c_int, ++y: c_int, ++width: c_int, ++height: c_int);
+pub fn glutVideoResize(x: c_int, y: c_int, width: c_int, height: c_int);
 
-pub fn glutVideoPan(++x: c_int, ++y: c_int, ++width: c_int, ++height: c_int);
+pub fn glutVideoPan(x: c_int, y: c_int, width: c_int, height: c_int);
 
 pub fn glutReportErrors();
 
-pub fn glutIgnoreKeyRepeat(++ignore: c_int);
+pub fn glutIgnoreKeyRepeat(ignore: c_int);
 
-pub fn glutSetKeyRepeat(++repeatMode: c_int);
+pub fn glutSetKeyRepeat(repeatMode: c_int);
 
 pub fn glutForceJoystickFunc();
 
-pub fn glutGameModeString(++string: *c_char);
+pub fn glutGameModeString(string: *c_char);
 
 pub fn glutEnterGameMode() -> c_int;
 
 pub fn glutLeaveGameMode();
 
-pub fn glutGameModeGet(++mode: GLenum) -> c_int;
+pub fn glutGameModeGet(mode: GLenum) -> c_int;
 
 }
