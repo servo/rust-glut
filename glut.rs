@@ -52,6 +52,15 @@ pub static ACTIVE_SHIFT: c_int = 1;
 pub static ACTIVE_CTRL: c_int = 2;
 pub static ACTIVE_ALT: c_int = 4;
 
+// mouse buttons
+pub static LEFT_BUTTON: c_int = 0;
+pub static MIDDLE_BUTTON: c_int = 1;
+pub static RIGHT_BUTTON: c_int = 2;
+
+// mouse button callback state
+pub static MOUSE_DOWN: c_int = 0;
+pub static MOUSE_UP: c_int = 1;
+
 static WINDOW_WIDTH: GLenum = 102;
 static WINDOW_HEIGHT: GLenum = 103;
 
