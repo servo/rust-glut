@@ -15,6 +15,12 @@ extern mod std;
 
 pub mod glut;
 
+#[cfg(target_os="macos")]
+pub mod machack;
+#[cfg(not(target_os="macos"))]
+#[path="machackstub.rs"]
+pub mod machack;
+
 #[cfg(test)]
 pub mod test;
 
