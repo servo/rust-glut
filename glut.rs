@@ -13,7 +13,8 @@ use glut::bindgen::{glutCreateWindow, glutDestroyWindow, glutDisplayFunc, glutMo
 use glut::bindgen::{glutKeyboardFunc, glutGetModifiers, glutMotionFunc, glutPassiveMotionFunc};
 use glut::bindgen::{glutGet, glutGetWindow};
 use glut::bindgen::{glutInit, glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc};
-use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSwapBuffers, glutTimerFunc};
+use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSetWindowTitle, glutSwapBuffers};
+use glut::bindgen::{glutTimerFunc};
 use core::libc::*;
 use core::local_data::{local_data_get, local_data_set};
 use core::ptr::{null, to_unsafe_ptr};
@@ -102,6 +103,13 @@ pub fn destroy_window(window: Window) {
 pub fn set_window(window: Window) {
     unsafe {
         glutSetWindow(*window);
+    }
+}
+
+pub fn set_window_title(window: Window, title: ~str) {
+    unsafe {
+        let bytes = to_bytes(title);
+        glutSetWindowTitle(to_ptr(bytes) as *c_char);
     }
 }
 
