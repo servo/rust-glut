@@ -64,6 +64,11 @@ pub static MOUSE_UP: c_int = 1;
 static WINDOW_WIDTH: GLenum = 102;
 static WINDOW_HEIGHT: GLenum = 103;
 
+#[cfg(target_os="linux")]
+pub static HAVE_PRECISE_MOUSE_WHEEL: bool = false;
+#[cfg(target_os="macos")]
+pub static HAVE_PRECISE_MOUSE_WHEEL: bool = true;
+
 pub enum State {
     WindowWidth,
     WindowHeight
@@ -249,6 +254,39 @@ pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) {
     unsafe {
         local_data_set(reshape_callback_tls_key, @callback);
         glutReshapeFunc(reshape_callback);
+    }
+}
+
+// Mouse wheel handling.
+//
+// This is not part of the standard, but it's supported by freeglut and our Mac hack.
+pub fn mouse_wheel_callback_tls_key(_callback: @@fn(wheel: c_int,
+                                                    direction: c_int,
+                                                    x: c_int,
+                                                    y: c_int)) {
+    // Empty.
+}
+
+#[cfg(target_os="linux")]
+pub extern fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
+    unsafe {
+        let callback = local_data_get(wheel_callback_tls_key).get();
+        (*callback)(wheel, direction, x, y)
+    }
+}
+
+#[cfg(target_os="linux")]
+pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
+    unsafe {
+        local_data_set(wheel_callback_tls_key, @callback);
+        glutMouseWheelFunc(mouse_wheel_callback);
+    }
+}
+
+#[cfg(target_os="macos")]
+pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
+    unsafe {
+        local_data_set(mouse_wheel_callback_tls_key, @callback);
     }
 }
 
