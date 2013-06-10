@@ -9,6 +9,7 @@
 
 extern mod opengles;   // FIXME: Should only be for tests.
 use glut::{swap_buffers, GLint};
+use glut::{init, DOUBLE, init_display_mode, create_window, display_func, timer_func, check_loop, destroy_window};
 use self::opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
 use self::opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
 use self::opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLenum};
@@ -137,34 +138,40 @@ fn display_callback() {
 
 /*
 #[test]
-fn test_triangle_and_square() unsafe {
-    let builder = task::task().sched_mode(task::PlatformThread);
-
-    let po: Port<()> = Port();
-    let ch = Chan(&po);
-    let _result_ch: Chan<()> = builder.spawn_listener(|_port| {
+fn test_triangle_and_square() {
+    let (po, ch): (Port<()>, Chan<()>) = stream();
+    let _result_ch: Chan<()> = do spawn_listener | _po | {
         init();
-        init_display_mode(0 as c_uint);
+        init_display_mode(DOUBLE);
         let window = create_window(~"Rust GLUT");
         display_func(display_callback);
 
-        let wakeup: Port<()> = Port();
-        let wakeup_chan = Chan(&wakeup);
-        timer_func(1000, || send(wakeup_chan, ()));
+        let (wakeup, wakeup_chan): (Port<()>, Chan<()>) = stream();
+
+        do timer_func(1000) { wakeup_chan.send(()); }
 
         loop {
             check_loop();
 
-            if peek(wakeup) {
-                recv(wakeup);
-                send(ch, ());
+            if wakeup.peek() {
+                wakeup.recv();
+                ch.send(());
                 destroy_window(window);
                 break;
             }
         }
-    });
+    };
 
-    recv(po);
+    po.recv();
 }
-
 */
+
+pub fn spawn_listener<A: Owned>(f: ~fn(Port<A>)) -> Chan<A> {
+    let (setup_po, setup_ch) = comm::stream();
+    do task::spawn {
+        let (po, ch) = comm::stream();
+        setup_ch.send(ch);
+        f(po);
+    }
+    setup_po.recv()
+}
