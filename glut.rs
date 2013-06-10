@@ -14,7 +14,7 @@ use glut::bindgen::{glutKeyboardFunc, glutGetModifiers, glutMotionFunc, glutPass
 use glut::bindgen::{glutGet, glutGetWindow};
 use glut::bindgen::{glutInit, glutInitDisplayMode, glutPostRedisplay, glutReshapeFunc};
 use glut::bindgen::{glutReshapeWindow, glutSetWindow, glutSetWindowTitle, glutSwapBuffers};
-use glut::bindgen::{glutTimerFunc};
+use glut::bindgen::{glutTimerFunc, glutIdleFunc};
 use core::libc::*;
 use core::local_data::{local_data_get, local_data_set};
 use core::ptr::{null, to_unsafe_ptr};
@@ -262,6 +262,24 @@ pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) {
     unsafe {
         local_data_set(reshape_callback_tls_key, @callback);
         glutReshapeFunc(reshape_callback);
+    }
+}
+
+pub fn idle_callback_tls_key(_callback: @@fn()) {
+    // Empty.
+}
+
+pub extern fn idle_callback() {
+    unsafe {
+        let callback = local_data_get(idle_callback_tls_key).get();
+        (*callback)();
+    }
+}
+
+pub fn idle_func(callback: @fn()) {
+    unsafe {
+        local_data_set(idle_callback_tls_key, @callback);
+        glutIdleFunc(idle_callback);
     }
 }
 
