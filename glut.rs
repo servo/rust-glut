@@ -296,7 +296,7 @@ pub fn mouse_wheel_callback_tls_key(_callback: @@fn(wheel: c_int,
 #[cfg(target_os="linux")]
 pub extern fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
     unsafe {
-        let callback = local_data_get(wheel_callback_tls_key).get();
+        let callback = local_data_get(mouse_wheel_callback_tls_key).get();
         (*callback)(wheel, direction, x, y)
     }
 }
@@ -304,7 +304,7 @@ pub extern fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: 
 #[cfg(target_os="linux")]
 pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
     unsafe {
-        local_data_set(wheel_callback_tls_key, @callback);
+        local_data_set(mouse_wheel_callback_tls_key, @callback);
         glutMouseWheelFunc(mouse_wheel_callback);
     }
 }
