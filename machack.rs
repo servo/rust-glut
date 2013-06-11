@@ -19,7 +19,7 @@ extern {
 // From CarbonEvents.h.
 static kEventMouseScroll: u32 = 11;
 
-extern fn scrollWheelImpl(this: id, _cmd: SEL, event: id) {
+extern fn scrollWheelImpl(_this: id, _cmd: SEL, event: id) {
     unsafe {
         // Get the underlying Carbon event to figure out if deviceDelta{Y,X} are available.
         let sel__eventRef = sel_registerName(transmute(&"_eventRef"[0]));
@@ -67,7 +67,7 @@ extern fn scrollWheelImpl(this: id, _cmd: SEL, event: id) {
     }
 }
 
-extern fn magnifyWithEvent(this: id, _cmd: SEL, event: id) {
+extern fn magnifyWithEvent(_this: id, _cmd: SEL, event: id) {
     unsafe {
         let sel_magnification = sel_registerName(transmute(&"magnification"[0]));
         let magnification = msg_send_double(event, sel_magnification) + 1.0;
