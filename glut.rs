@@ -111,7 +111,7 @@ pub fn set_window(window: Window) {
     }
 }
 
-pub fn set_window_title(window: Window, title: &str) {
+pub fn set_window_title(_window: Window, title: &str) {
     unsafe {
         let bytes = to_bytes(title);
         glutSetWindowTitle(to_ptr(bytes) as *c_char);
