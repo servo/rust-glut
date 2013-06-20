@@ -2,10 +2,10 @@ extern mod cocoa;
 
 use glut::{mouse_callback_tls_key, mouse_wheel_callback_tls_key};
 
-use core::cast::transmute;
-use core::libc::{c_int, c_void};
-use core::local_data::local_data_get;
-use core::ptr::null;
+use std::cast::transmute;
+use std::libc::{c_int, c_void};
+use std::local_data::local_data_get;
+use std::ptr::null;
 use machack::cocoa::base::{SEL, class_addMethod, id, msg_send_double, msg_send_id, objc_getClass};
 use machack::cocoa::base::{sel_registerName};
 

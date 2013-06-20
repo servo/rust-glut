@@ -22,9 +22,10 @@ use self::opengles::gl2::{get_shader_info_log, get_shader_iv};
 use self::opengles::gl2::{link_program, shader_source};
 use self::opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
-use core::libc::c_int;
-use core::io::println;
-use core::str::to_bytes;
+use std::comm;
+use std::libc::c_int;
+use std::io::println;
+use std::task;
 
 fn fragment_shader_source() -> ~str {
     ~"
@@ -54,7 +55,7 @@ fn vertex_shader_source() -> ~str {
 
 fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, ~[to_bytes(source_str)]);
+    shader_source(shader_id, ~[source_str.as_bytes().to_owned()]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
