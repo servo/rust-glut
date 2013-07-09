@@ -9,7 +9,6 @@
 
 extern mod opengles;   // FIXME: Should only be for tests.
 use glut::{swap_buffers, GLint};
-use glut::{init, DOUBLE, init_display_mode, create_window, display_func, timer_func, check_loop, destroy_window};
 use self::opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
 use self::opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
 use self::opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLenum};
@@ -55,7 +54,7 @@ fn vertex_shader_source() -> ~str {
 
 fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, ~[source_str.as_bytes().to_owned()]);
+    shader_source(shader_id, [source_str.as_bytes().to_owned()]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
