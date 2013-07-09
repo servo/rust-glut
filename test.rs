@@ -167,7 +167,7 @@ fn test_triangle_and_square() {
 }
 */
 
-pub fn spawn_listener<A: Owned>(f: ~fn(Port<A>)) -> Chan<A> {
+pub fn spawn_listener<A: Send>(f: ~fn(Port<A>)) -> Chan<A> {
     let (setup_po, setup_ch) = comm::stream();
     do task::spawn {
         let (po, ch) = comm::stream();
