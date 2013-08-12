@@ -61,6 +61,7 @@ static WINDOW_WIDTH: GLenum = 102;
 static WINDOW_HEIGHT: GLenum = 103;
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 pub static HAVE_PRECISE_MOUSE_WHEEL: bool = false;
 #[cfg(target_os="macos")]
 pub static HAVE_PRECISE_MOUSE_WHEEL: bool = true;
@@ -292,6 +293,7 @@ pub fn mouse_wheel_callback_tls_key(_callback: @@fn(wheel: c_int,
 }
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 pub extern fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
     unsafe {
         let callback = local_data_get(mouse_wheel_callback_tls_key).get();
@@ -300,6 +302,7 @@ pub extern fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: 
 }
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
     unsafe {
         local_data_set(mouse_wheel_callback_tls_key, @callback);
@@ -322,6 +325,7 @@ pub fn check_loop() {
 }
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 pub fn check_loop() {
     unsafe {
         glutMainLoopEvent();
@@ -374,6 +378,11 @@ extern {
 extern {
 }
 
+#[cfg(target_os="android")]
+#[link_args="-landroid-glue"]
+extern {
+}
+
 #[cfg(target_os="macos")]
 #[nolink]
 extern {
@@ -382,6 +391,7 @@ extern {
 }
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 #[nolink]
 extern {
     // freeglut extension.
@@ -395,22 +405,27 @@ pub fn glutInit(argcp: *c_int, argv: **c_char);
 
 pub fn glutInitDisplayMode(mode: c_uint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutInitDisplayString(string: *c_char);
 
+#[cfg(not(target_os="android"))]
 pub fn glutInitWindowPosition(x: c_int, y: c_int);
 
 pub fn glutInitWindowSize(width: c_int, height: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutMainLoop();
 
 pub fn glutCreateWindow(title: *c_char) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutCreateSubWindow(win: c_int, x: c_int, y: c_int, width: c_int, height: c_int) -> c_int;
 
 pub fn glutDestroyWindow(win: c_int);
 
 pub fn glutPostRedisplay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutPostWindowRedisplay(win: c_int);
 
 pub fn glutSwapBuffers();
@@ -421,62 +436,90 @@ pub fn glutSetWindow(win: c_int);
 
 pub fn glutSetWindowTitle(title: *c_char);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetIconTitle(title: *c_char);
 
+#[cfg(not(target_os="android"))]
 pub fn glutPositionWindow(x: c_int, y: c_int);
 
 pub fn glutReshapeWindow(width: c_int, height: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutPopWindow();
 
+#[cfg(not(target_os="android"))]
 pub fn glutPushWindow();
 
+#[cfg(not(target_os="android"))]
 pub fn glutIconifyWindow();
 
+#[cfg(not(target_os="android"))]
 pub fn glutShowWindow();
 
+#[cfg(not(target_os="android"))]
 pub fn glutHideWindow();
 
+#[cfg(not(target_os="android"))]
 pub fn glutFullScreen();
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetCursor(cursor: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWarpPointer(x: c_int, y: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutEstablishOverlay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutRemoveOverlay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutUseLayer(layer: GLenum);
 
+#[cfg(not(target_os="android"))]
 pub fn glutPostOverlayRedisplay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutPostWindowOverlayRedisplay(win: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutShowOverlay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutHideOverlay();
 
+#[cfg(not(target_os="android"))]
 pub fn glutCreateMenu(arg1: *u8) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutDestroyMenu(menu: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutGetMenu() -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetMenu(menu: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutAddMenuEntry(label: *c_char, value: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutAddSubMenu(label: *c_char, submenu: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutChangeToMenuEntry(item: c_int, label: *c_char, value: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutChangeToSubMenu(item: c_int, label: *c_char, submenu: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutRemoveMenuItem(item: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutAttachMenu(button: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutDetachMenu(button: c_int);
 
 pub fn glutDisplayFunc(func: *u8);
@@ -488,140 +531,202 @@ pub fn glutKeyboardFunc(func: *u8);
 pub fn glutMouseFunc(func: *u8);
 
 #[cfg(target_os="linux")]
+#[cfg(target_os="android")]
 pub fn glutMouseWheelFunc(func: *u8);
 
 pub fn glutMotionFunc(func: *u8);
 
 pub fn glutPassiveMotionFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutEntryFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutVisibilityFunc(func: *u8);
 
 pub fn glutIdleFunc(func: *u8);
 
 pub fn glutTimerFunc(millis: c_uint, func: *u8, value: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutMenuStateFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSpecialFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSpaceballMotionFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSpaceballRotateFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSpaceballButtonFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutButtonBoxFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutDialsFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutTabletMotionFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutTabletButtonFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutMenuStatusFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutOverlayDisplayFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWindowStatusFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutKeyboardUpFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSpecialUpFunc(func: *u8);
 
+#[cfg(not(target_os="android"))]
 pub fn glutJoystickFunc(func: *u8, pollInterval: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetColor(arg1: c_int, red: GLfloat, green: GLfloat, blue: GLfloat);
 
+#[cfg(not(target_os="android"))]
 pub fn glutGetColor(ndx: c_int, component: c_int) -> GLfloat;
 
+#[cfg(not(target_os="android"))]
 pub fn glutCopyColormap(win: c_int);
 
 pub fn glutGet(_type: GLenum) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutDeviceGet(_type: GLenum) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutExtensionSupported(name: *c_char) -> c_int;
 
 pub fn glutGetModifiers() -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutLayerGet(_type: GLenum) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutGetProcAddress(procName: *c_char) -> *c_void;
 
+#[cfg(not(target_os="android"))]
 pub fn glutBitmapCharacter(font: *c_void, character: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutBitmapWidth(font: *c_void, character: c_int) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutStrokeCharacter(font: *c_void, character: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutStrokeWidth(font: *c_void, character: c_int) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutBitmapLength(font: *c_void, string: *c_uchar) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutStrokeLength(font: *c_void, string: *c_uchar) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireSphere(radius: GLdouble, slices: GLint, stacks: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidSphere(radius: GLdouble, slices: GLint, stacks: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireCone(base: GLdouble, height: GLdouble, slices: GLint, stacks: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidCone(base: GLdouble, height: GLdouble, slices: GLint, stacks: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireCube(size: GLdouble);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidCube(size: GLdouble);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireTorus(innerRadius: GLdouble, outerRadius: GLdouble, sides: GLint, rings: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidTorus(innerRadius: GLdouble, outerRadius: GLdouble, sides: GLint, rings: GLint);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireDodecahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidDodecahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireTeapot(size: GLdouble);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidTeapot(size: GLdouble);
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireOctahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidOctahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireTetrahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidTetrahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutWireIcosahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutSolidIcosahedron();
 
+#[cfg(not(target_os="android"))]
 pub fn glutVideoResizeGet(param: GLenum) -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetupVideoResizing();
 
+#[cfg(not(target_os="android"))]
 pub fn glutStopVideoResizing();
 
+#[cfg(not(target_os="android"))]
 pub fn glutVideoResize(x: c_int, y: c_int, width: c_int, height: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutVideoPan(x: c_int, y: c_int, width: c_int, height: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutReportErrors();
 
+#[cfg(not(target_os="android"))]
 pub fn glutIgnoreKeyRepeat(ignore: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutSetKeyRepeat(repeatMode: c_int);
 
+#[cfg(not(target_os="android"))]
 pub fn glutForceJoystickFunc();
 
+#[cfg(not(target_os="android"))]
 pub fn glutGameModeString(string: *c_char);
 
+#[cfg(not(target_os="android"))]
 pub fn glutEnterGameMode() -> c_int;
 
+#[cfg(not(target_os="android"))]
 pub fn glutLeaveGameMode();
 
+#[cfg(not(target_os="android"))]
 pub fn glutGameModeGet(mode: GLenum) -> c_int;
 
 }

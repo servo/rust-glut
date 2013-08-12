@@ -7,6 +7,9 @@ AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
 
+ifeq ($(CFG_OSTYPE),linux-androideabi)
+RUSTFLAGS += -L.
+endif
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
 .PHONY: all
@@ -15,12 +18,18 @@ all:	librustglut.dummy
 %.o:	%.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-librustglut.dummy: glut.rc $(RUST_SRC)
+librustglut.dummy: glut.rc $(RUST_SRC) libandroid-glue.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@
 	touch $@
 
-rustglut-test: glut.rc $(RUST_SRC)
+rustglut-test: glut.rc $(RUST_SRC) libandroid-glue.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
+
+libandroid-glue.a: android-glue.o
+	$(AR) rcs libandroid-glue.a android-glue.o
+
+android-glue.o: android-glue.c
+	$(CC) $(CFLAGS) $< -o $@ -c
 
 check: rustglut-test
 	./rustglut-test
