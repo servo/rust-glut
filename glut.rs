@@ -65,6 +65,8 @@ static WINDOW_HEIGHT: GLenum = 103;
 pub static HAVE_PRECISE_MOUSE_WHEEL: bool = false;
 #[cfg(target_os="macos")]
 pub static HAVE_PRECISE_MOUSE_WHEEL: bool = true;
+#[cfg(target_os="android")]
+pub static HAVE_PRECISE_MOUSE_WHEEL: bool = false;
 
 pub enum State {
     WindowWidth,
