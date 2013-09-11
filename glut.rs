@@ -86,6 +86,7 @@ pub enum State {
     WindowHeight
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn init() { 
     unsafe {
         let argc = 0 as c_int;
@@ -98,6 +99,7 @@ pub fn init() {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn create_window(name: ~str) -> Window {
     unsafe {
         do name.to_c_str().with_ref |bytes| {
@@ -106,18 +108,21 @@ pub fn create_window(name: ~str) -> Window {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn destroy_window(window: Window) {
     unsafe {
         glutDestroyWindow(*window);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn set_window(window: Window) {
     unsafe {
         glutSetWindow(*window);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn set_window_title(_window: Window, title: &str) {
     unsafe {
         let title = title.to_owned();
@@ -127,6 +132,7 @@ pub fn set_window_title(_window: Window, title: &str) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn reshape_window(window: Window, width: c_int, height: c_int) {
     unsafe {
         let current_window = glutGetWindow();
@@ -136,12 +142,14 @@ pub fn reshape_window(window: Window, width: c_int, height: c_int) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn display_callback() {
     do local_data::get(display_tls_key) |callback| {
         (**callback.unwrap())();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn display_func(callback: @fn()) {
     local_data::set(display_tls_key, @callback);
     unsafe {
@@ -149,12 +157,14 @@ pub fn display_func(callback: @fn()) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn keyboard_callback(key: c_uchar, x: c_int, y: c_int) {
     do local_data::get(keyboard_tls_key) |callback| {
         (**callback.unwrap())(key, x, y);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn keyboard_func(callback: @fn(key: c_uchar, x: c_int, y: c_int)) {
     local_data::set(keyboard_tls_key, @callback);
     unsafe {
@@ -162,12 +172,14 @@ pub fn keyboard_func(callback: @fn(key: c_uchar, x: c_int, y: c_int)) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn mouse_callback(button: c_int, state: c_int, x: c_int, y: c_int) {
     do local_data::get(mouse_tls_key) |callback| {
         (**callback.unwrap())(button, state, x, y);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn mouse_func(callback: @fn(button: c_int, state: c_int, x: c_int, y: c_int)) {
     local_data::set(mouse_tls_key, @callback);
     unsafe {
@@ -175,12 +187,14 @@ pub fn mouse_func(callback: @fn(button: c_int, state: c_int, x: c_int, y: c_int)
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn motion_callback(x: c_int, y: c_int) {
     do local_data::get(motion_tls_key) |callback| {
         (**callback.unwrap())(x, y);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn motion_func(callback: @fn(x: c_int, y: c_int)) {
     local_data::set(motion_tls_key, @callback);
     unsafe {
@@ -188,12 +202,14 @@ pub fn motion_func(callback: @fn(x: c_int, y: c_int)) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn passive_motion_callback(x: c_int, y: c_int) {
     do local_data::get(passive_motion_tls_key) |callback| {
         (**callback.unwrap())(x, y);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn passive_motion_func(callback: @fn(x: c_int, y: c_int)) {
     local_data::set(passive_motion_tls_key, @callback);
     unsafe {
@@ -201,12 +217,14 @@ pub fn passive_motion_func(callback: @fn(x: c_int, y: c_int)) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn timer_callback(index: int) {
     do local_data::get(timer_tls_key) |callback| {
         ((**callback.unwrap())[index as uint])();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn timer_func(msecs: u32, callback: @fn()) {
     do local_data::get(timer_tls_key) |data| {
         let callbacks;
@@ -227,12 +245,14 @@ pub fn timer_func(msecs: u32, callback: @fn()) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn reshape_callback(width: c_int, height: c_int) {
     do local_data::get(reshape_tls_key) |callback| {
         (**callback.unwrap())(width, height);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) {
     local_data::set(reshape_tls_key, @callback);
     unsafe {
@@ -240,12 +260,14 @@ pub fn reshape_func(_window: Window, callback: @fn(x: c_int, y: c_int)) {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn idle_callback() {
     do local_data::get(idle_tls_key) |callback| {
         (**callback.unwrap())();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn idle_func(callback: @fn()) {
     local_data::set(idle_tls_key, @callback);
     unsafe {
@@ -258,6 +280,7 @@ pub fn idle_func(callback: @fn()) {
 // This is not part of the standard, but it's supported by freeglut and our Mac hack.
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
+#[fixed_stack_segment] #[inline(never)]
 pub extern "C" fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
     do local_data::get(mouse_wheel_tls_key) |callback| {
         (**callback.unwrap())(wheel, direction, x, y);
@@ -266,6 +289,7 @@ pub extern "C" fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int,
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
+#[fixed_stack_segment] #[inline(never)]
 pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
     local_data::set(mouse_wheel_tls_key, @callback);
     unsafe {
@@ -274,11 +298,13 @@ pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, 
 }
 
 #[cfg(target_os="macos")]
+#[fixed_stack_segment] #[inline(never)]
 pub fn mouse_wheel_func(callback: @fn(wheel: c_int, direction: c_int, x: c_int, y: c_int)) {
         local_data::set(mouse_wheel_tls_key, @callback);
 }
 
 #[cfg(target_os="macos")]
+#[fixed_stack_segment] #[inline(never)]
 pub fn check_loop() {
     unsafe {
         glutCheckLoop();
@@ -287,30 +313,35 @@ pub fn check_loop() {
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
+#[fixed_stack_segment] #[inline(never)]
 pub fn check_loop() {
     unsafe {
         glutMainLoopEvent();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn init_display_mode(mode: c_uint) {
     unsafe {
         glutInitDisplayMode(mode);
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn swap_buffers() {
     unsafe {
         glutSwapBuffers();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn post_redisplay() {
     unsafe {
         glutPostRedisplay();
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn get(state: State) -> c_int {
     unsafe {
         let glut_state;
@@ -322,9 +353,17 @@ pub fn get(state: State) -> c_int {
     }
 }
 
+#[fixed_stack_segment] #[inline(never)]
 pub fn get_modifiers() -> c_int {
     unsafe {
         glutGetModifiers()
+    }
+}
+
+#[fixed_stack_segment] #[inline(never)]
+pub fn init_window_size(width:uint, height:uint) {
+    unsafe {
+        glutInitWindowSize(width as c_int, height as c_int);
     }
 }
 
@@ -483,21 +522,21 @@ pub fn glutAttachMenu(button: c_int);
 #[cfg(not(target_os="android"))]
 pub fn glutDetachMenu(button: c_int);
 
-pub fn glutDisplayFunc(func: *u8);
+pub fn glutDisplayFunc(func: extern "C" fn());
 
-pub fn glutReshapeFunc(func: *u8);
+pub fn glutReshapeFunc(func: extern "C" fn(i32, i32));
 
-pub fn glutKeyboardFunc(func: *u8);
+pub fn glutKeyboardFunc(func: extern "C" fn(u8, i32, i32));
 
-pub fn glutMouseFunc(func: *u8);
+pub fn glutMouseFunc(func: extern "C" fn(i32, i32, i32, i32));
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
-pub fn glutMouseWheelFunc(func: *u8);
+pub fn glutMouseWheelFunc(func: extern "C" fn(i32, i32, i32, i32));
 
-pub fn glutMotionFunc(func: *u8);
+pub fn glutMotionFunc(func: extern "C" fn(i32, i32));
 
-pub fn glutPassiveMotionFunc(func: *u8);
+pub fn glutPassiveMotionFunc(func: extern "C" fn(i32, i32));
 
 #[cfg(not(target_os="android"))]
 pub fn glutEntryFunc(func: *u8);
@@ -505,9 +544,9 @@ pub fn glutEntryFunc(func: *u8);
 #[cfg(not(target_os="android"))]
 pub fn glutVisibilityFunc(func: *u8);
 
-pub fn glutIdleFunc(func: *u8);
+pub fn glutIdleFunc(func: extern "C" fn());
 
-pub fn glutTimerFunc(millis: c_uint, func: *u8, value: c_int);
+pub fn glutTimerFunc(millis: c_uint, func: extern "C" fn(int), value: c_int);
 
 #[cfg(not(target_os="android"))]
 pub fn glutMenuStateFunc(func: *u8);
