@@ -58,7 +58,7 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
-        println(fmt!("error: %d", get_error() as int));
+        println(format!("error: {:d}", get_error() as int));
         fail!(~"failed to compile shader with error");
     }
 
