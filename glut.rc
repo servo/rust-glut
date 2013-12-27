@@ -11,6 +11,10 @@
        vers = "0.1")];
 #[crate_type = "lib"];
 
+#[feature(globs)];
+#[feature(macro_rules)];
+#[feature(managed_boxes)];
+
 extern mod std;
 
 pub mod glut;
