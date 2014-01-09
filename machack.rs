@@ -11,7 +11,7 @@ use std::ptr::null;
 use machack::cocoa::base::{SEL, class_addMethod, id, msg_send_double, msg_send_id, objc_getClass};
 use machack::cocoa::base::{sel_registerName};
 
-#[link_args="-framework Carbon"]
+#[link(name="Carbon", kind="framework")]
 extern {
     // Carbon API.
     #[fast_ffi]

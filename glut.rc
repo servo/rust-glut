@@ -7,13 +7,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[link(name = "glut",
-       vers = "0.1")];
+#[crate_id = "github.com/mozilla-servo/rust-glut#glut:0.1"];
 #[crate_type = "lib"];
 
-#[feature(globs)];
 #[feature(macro_rules)];
-#[feature(managed_boxes)];
 
 extern mod std;
 

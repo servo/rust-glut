@@ -166,12 +166,12 @@ fn test_triangle_and_square() {
 }
 */
 
-pub fn spawn_listener<A: Send>(f: ~fn(Port<A>)) -> Chan<A> {
-    let (setup_po, setup_ch) = comm::stream();
-    do task::spawn {
-        let (po, ch) = comm::stream();
+pub fn spawn_listener<A: Send>(f: proc(Port<A>)) -> Chan<A> {
+    let (setup_po, setup_ch) = Chan::new();
+    spawn(proc() {
+        let (po, ch) = Chan::new();
         setup_ch.send(ch);
         f(po);
-    }
+    });
     setup_po.recv()
 }
