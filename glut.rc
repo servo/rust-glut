@@ -12,7 +12,7 @@
 
 #[feature(macro_rules)];
 
-extern mod std;
+extern crate std;
 
 pub mod glut;
 
