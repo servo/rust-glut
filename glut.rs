@@ -12,7 +12,7 @@
 use std::cast;
 use std::libc::{c_int, c_uint, c_uchar, c_char};
 use std::local_data;
-use std::ptr::{null, to_unsafe_ptr};
+use std::ptr::null;
 
 /* FIXME: global variable glutStrokeRoman */
 
@@ -100,8 +100,8 @@ pub fn init() {
         let glut = ~"glut";
         glut.to_c_str().with_ref(|command| {
             let argv: (*u8, *u8) = (command as *u8, null());
-            let argv_p = cast::transmute(to_unsafe_ptr(&argv));
-            glutInit(to_unsafe_ptr(&argc), argv_p);
+            let argv_p = cast::transmute(&argv);
+            glutInit(&argc, argv_p);
         });
     }
 }
@@ -116,13 +116,15 @@ pub fn create_window(name: ~str) -> Window {
 
 pub fn destroy_window(window: Window) {
     unsafe {
-        glutDestroyWindow(*window);
+        let Window(i) = window;
+        glutDestroyWindow(i);
     }
 }
 
 pub fn set_window(window: Window) {
     unsafe {
-        glutSetWindow(*window);
+        let Window(i) = window;
+        glutSetWindow(i);
     }
 }
 
@@ -138,7 +140,8 @@ pub fn set_window_title(_window: Window, title: &str) {
 pub fn reshape_window(window: Window, width: c_int, height: c_int) {
     unsafe {
         let current_window = glutGetWindow();
-        glutSetWindow(*window);
+        let Window(i) = window;
+        glutSetWindow(i);
         glutReshapeWindow(width, height);
         glutSetWindow(current_window);
     }

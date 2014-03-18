@@ -1,6 +1,6 @@
 #[allow(non_uppercase_statics)];
 
-extern mod cocoa;
+extern crate cocoa;
 
 use glut::{mouse_callback_tls_key, mouse_wheel_callback_tls_key};
 

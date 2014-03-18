@@ -7,7 +7,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-extern mod opengles = "rust-opengles";   // FIXME: Should only be for tests.
+extern crate opengles = "rust-opengles";   // FIXME: Should only be for tests.
 use glut::{swap_buffers, GLint};
 use self::opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
 use self::opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
