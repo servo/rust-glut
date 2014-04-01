@@ -19,7 +19,7 @@ all:	librustglut.dummy
 	$(CC) $< -o $@ -c $(CFLAGS)
 
 librustglut.dummy: glut.rc $(RUST_SRC) libandroid-glue.a
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --crate-type=lib
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 rustglut-test: glut.rc $(RUST_SRC) libandroid-glue.a
