@@ -21,8 +21,8 @@ use self::opengles::gl2::{get_shader_info_log, get_shader_iv};
 use self::opengles::gl2::{link_program, shader_source};
 use self::opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
+use libc::c_int;
 use std::comm;
-use std::libc::c_int;
 use std::io::println;
 use std::task;
 

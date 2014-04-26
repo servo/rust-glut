@@ -1,11 +1,11 @@
-#[allow(non_uppercase_statics)];
+#![allow(non_uppercase_statics)]
 
 extern crate cocoa;
 
 use glut::{mouse_callback_tls_key, mouse_wheel_callback_tls_key};
 
+use libc::{c_int, c_void};
 use std::cast::transmute;
-use std::libc::{c_int, c_void};
 use std::local_data::local_data_get;
 use std::ptr::null;
 use machack::cocoa::base::{SEL, class_addMethod, id, msg_send_double, msg_send_id, objc_getClass};
