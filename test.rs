@@ -27,7 +27,7 @@ use std::io::println;
 use std::task;
 
 fn fragment_shader_source() -> ~str {
-    ~"
+    "
     #ifdef GLES2
         precision mediump float;
     #endif
@@ -35,11 +35,11 @@ fn fragment_shader_source() -> ~str {
         void main(void) {
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
-    "
+    ".to_owned()
 }
 
 fn vertex_shader_source() -> ~str {
-    ~"
+    "
         attribute vec3 aVertexPosition;
 
         /*uniform mat4 uMVMatrix;
@@ -49,7 +49,7 @@ fn vertex_shader_source() -> ~str {
             gl_Position = /*uPMatrix * uMVMatrix **/
                 vec4(aVertexPosition, 1.0);
         }
-    "
+    ".to_owned()
 }
 
 fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
@@ -59,12 +59,12 @@ fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
 
     if get_error() != NO_ERROR {
         println(format!("error: {:d}", get_error() as int));
-        fail!(~"failed to compile shader with error");
+        fail!("failed to compile shader with error");
     }
 
     if get_shader_iv(shader_id, COMPILE_STATUS) == (0 as GLint) {
         println(get_shader_info_log(shader_id));
-        fail!(~"failed to compile shader");
+        fail!("failed to compile shader");
     }
     return shader_id;
 }
@@ -79,7 +79,7 @@ struct ShaderProgram {
 fn ShaderProgram(program: GLuint) -> ShaderProgram {
     let p = ShaderProgram {
         program : program,
-        aVertexPosition : get_attrib_location(program, ~"aVertexPosition"),
+        aVertexPosition : get_attrib_location(program, "aVertexPosition"),
         /*self.uPMatrix : get_uniform_location(program, "uPMatrix"),
         self.uMVMatrix : get_uniform_location(program, "uMVMatrix")*/
     };
@@ -98,7 +98,7 @@ fn init_shaders() -> ShaderProgram {
     link_program(program);
 
     if get_program_iv(program, LINK_STATUS) == (0 as GLint) {
-        fail!(~"failed to initialize program");
+        fail!("failed to initialize program");
     }
 
     use_program(program);
@@ -109,11 +109,11 @@ fn init_shaders() -> ShaderProgram {
 fn init_buffers() -> GLuint {
     let triangle_vertex_buffer = gen_buffers(1 as GLsizei)[0];
     bind_buffer(ARRAY_BUFFER, triangle_vertex_buffer);
-    let vertices = ~[
+    let vertices = vec!(
         0.0f32, 1.0f32, 0.0f32,
         1.0f32, 0.0f32, 0.0f32,
         0.0f32, 0.0f32, 0.0f32
-    ];
+    );
     buffer_data(ARRAY_BUFFER, vertices, STATIC_DRAW);
     return triangle_vertex_buffer;
 }

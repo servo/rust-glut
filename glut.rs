@@ -11,7 +11,6 @@
 
 use libc::{c_int, c_uint, c_uchar, c_char};
 use std::cast;
-use std::local_data;
 use std::ptr::null;
 
 /* FIXME: global variable glutStrokeRoman */
@@ -73,15 +72,15 @@ pub trait ReshapeCallback { fn call(&self, x: c_int, y: c_int); }
 pub trait IdleCallback { fn call(&self); }
 pub trait MouseWheelCallback { fn call(&self, wheel: c_int, direction: c_int, x: c_int, y: c_int); }
 
-local_data_key!(display_tls_key: ~DisplayCallback:'static)
-local_data_key!(keyboard_tls_key: ~KeyboardCallback:'static)
-local_data_key!(mouse_tls_key: ~MouseCallback:'static)
-local_data_key!(motion_tls_key: ~MotionCallback:'static)
-local_data_key!(passive_motion_tls_key: ~PassiveMotionCallback:'static)
-local_data_key!(timer_tls_key: ~TimerCallback:'static)
-local_data_key!(reshape_tls_key: ~ReshapeCallback:'static)
-local_data_key!(idle_tls_key: ~IdleCallback:'static)
-local_data_key!(mouse_wheel_tls_key: ~MouseWheelCallback:'static)
+local_data_key!(display_tls_key: Box<DisplayCallback:'static>)
+local_data_key!(keyboard_tls_key: Box<KeyboardCallback:'static>)
+local_data_key!(mouse_tls_key: Box<MouseCallback:'static>)
+local_data_key!(motion_tls_key: Box<MotionCallback:'static>)
+local_data_key!(passive_motion_tls_key: Box<PassiveMotionCallback:'static>)
+local_data_key!(timer_tls_key: Box<TimerCallback:'static>)
+local_data_key!(reshape_tls_key: Box<ReshapeCallback:'static>)
+local_data_key!(idle_tls_key: Box<IdleCallback:'static>)
+local_data_key!(mouse_wheel_tls_key: Box<MouseWheelCallback:'static>)
 
 pub enum State {
     WindowWidth,
@@ -91,7 +90,7 @@ pub enum State {
 pub fn init() { 
     unsafe {
         let argc = 0 as c_int;
-        let glut = ~"glut";
+        let glut = "glut";
         glut.to_c_str().with_ref(|command| {
             let argv: (*u8, *u8) = (command as *u8, null());
             let argv_p = cast::transmute(&argv);
@@ -142,120 +141,104 @@ pub fn reshape_window(window: Window, width: c_int, height: c_int) {
 }
 
 pub extern "C" fn display_callback() {
-    local_data::get(display_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
-            cb.call();
-        });
+    display_tls_key.get().as_ref().map(|&ref cb| {
+        cb.call();
     });
 }
 
-pub fn display_func(callback: ~DisplayCallback:'static) {
-    local_data::set(display_tls_key, callback);
+pub fn display_func(callback: Box<DisplayCallback:'static>) {
+    display_tls_key.replace(Some(callback));
     unsafe {
         glutDisplayFunc(display_callback);
     }
 }
 
 pub extern "C" fn keyboard_callback(key: c_uchar, x: c_int, y: c_int) {
-    local_data::get(keyboard_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
-            cb.call(key, x, y);
-        });
+    keyboard_tls_key.get().as_ref().map(|&ref cb| {
+        cb.call(key, x, y);
     });
 }
 
-pub fn keyboard_func(callback: ~KeyboardCallback:'static) {
-    local_data::set(keyboard_tls_key, callback);
+pub fn keyboard_func(callback: Box<KeyboardCallback:'static>) {
+    keyboard_tls_key.replace(Some(callback));
     unsafe {
         glutKeyboardFunc(keyboard_callback);
     }
 }
 
 pub extern "C" fn mouse_callback(button: c_int, state: c_int, x: c_int, y: c_int) {
-    local_data::get(mouse_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
-            cb.call(button, state, x, y);
-        });
+    mouse_tls_key.get().as_ref().map(|&ref cb| {
+        cb.call(button, state, x, y);
     });
 }
 
-pub fn mouse_func(callback: ~MouseCallback:'static) {
-    local_data::set(mouse_tls_key, callback);
+pub fn mouse_func(callback: Box<MouseCallback:'static>) {
+    mouse_tls_key.replace(Some(callback));
     unsafe {
         glutMouseFunc(mouse_callback);
     }
 }
 
 pub extern "C" fn motion_callback(x: c_int, y: c_int) {
-    local_data::get(motion_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
-            cb.call(x, y);
-        });
+    motion_tls_key.get().as_ref().map(|&ref cb| {
+        cb.call(x, y);
     });
 }
 
-pub fn motion_func(callback: ~MotionCallback:'static) {
-    local_data::set(motion_tls_key, callback);
+pub fn motion_func(callback: Box<MotionCallback:'static>) {
+    motion_tls_key.replace(Some(callback));
     unsafe {
         glutMotionFunc(motion_callback);
     }
 }
 
 pub extern "C" fn passive_motion_callback(x: c_int, y: c_int) {
-    local_data::get(passive_motion_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
+    passive_motion_tls_key.get().as_ref().map(|&ref cb| {
             cb.call(x, y);
         });
-    });
 }
 
-pub fn passive_motion_func(callback: ~PassiveMotionCallback:'static) {
-    local_data::set(passive_motion_tls_key, callback);
+pub fn passive_motion_func(callback: Box<PassiveMotionCallback:'static>) {
+    passive_motion_tls_key.replace(Some(callback));
     unsafe {
         glutPassiveMotionFunc(passive_motion_callback);
     }
 }
 
 pub extern "C" fn timer_callback(_index: int) {
-    local_data::get(timer_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
+    timer_tls_key.get().as_ref().map(|&ref cb| {
             cb.call();
         });
-    });
 }
 
-pub fn timer_func(msecs: u32, callback: ~TimerCallback:'static) {
-    local_data::set(timer_tls_key, callback);
+pub fn timer_func(msecs: u32, callback: Box<TimerCallback:'static>) {
+    timer_tls_key.replace(Some(callback));
     unsafe {
         glutTimerFunc(msecs, timer_callback, 0);
     }
 }
 
 pub extern "C" fn reshape_callback(width: c_int, height: c_int) {
-    local_data::get(reshape_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
+    reshape_tls_key.get().as_ref().map(|&ref cb| {
             cb.call(width, height);
         });
-    });
 }
 
-pub fn reshape_func(_window: Window, callback: ~ReshapeCallback:'static) {
-    local_data::set(reshape_tls_key, callback);
+pub fn reshape_func(_window: Window, callback: Box<ReshapeCallback:'static>) {
+    reshape_tls_key.replace(Some(callback));
     unsafe {
         glutReshapeFunc(reshape_callback);
     }
 }
 
 pub extern "C" fn idle_callback() {
-    local_data::get(idle_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
+    idle_tls_key.get().as_ref().map(|&ref cb| {
             cb.call();
         });
-    });
 }
 
-pub fn idle_func(callback: ~IdleCallback:'static) {
-    local_data::set(idle_tls_key, callback);
+pub fn idle_func(callback: Box<IdleCallback:'static>) {
+    idle_tls_key.replace(Some(callback));
     unsafe {
         glutIdleFunc(idle_callback);
     }
@@ -267,25 +250,23 @@ pub fn idle_func(callback: ~IdleCallback:'static) {
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
 pub extern "C" fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
-    local_data::get(mouse_wheel_tls_key, |callback| {
-        callback.as_ref().map(|&ref cb| {
-            cb.call(wheel, direction, x, y);
-        });
+    mouse_wheel_tls_key.get().as_ref().map(|&ref cb| {
+        cb.call(wheel, direction, x, y);
     });
 }
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
-pub fn mouse_wheel_func(callback: ~MouseWheelCallback:'static) {
-    local_data::set(mouse_wheel_tls_key, callback);
+pub fn mouse_wheel_func(callback: Box<MouseWheelCallback:'static>) {
+    mouse_wheel_tls_key.replace(Some(callback));
     unsafe {
         glutMouseWheelFunc(mouse_wheel_callback);
     }
 }
 
 #[cfg(target_os="macos")]
-pub fn mouse_wheel_func(callback: ~MouseWheelCallback:'static) {
-        local_data::set(mouse_wheel_tls_key, callback);
+pub fn mouse_wheel_func(callback: Box<MouseWheelCallback:'static>) {
+        mouse_wheel_tls_key.replace(Some(callback));
 }
 
 #[cfg(target_os="macos")]
