@@ -35,7 +35,7 @@ fn fragment_shader_source() -> ~str {
         void main(void) {
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
-    ".to_owned()
+    ".to_string()
 }
 
 fn vertex_shader_source() -> ~str {
@@ -49,12 +49,12 @@ fn vertex_shader_source() -> ~str {
             gl_Position = /*uPMatrix * uMVMatrix **/
                 vec4(aVertexPosition, 1.0);
         }
-    ".to_owned()
+    ".to_string()
 }
 
 fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, [source_str.as_bytes().to_owned()]);
+    shader_source(shader_id, [source_str.as_bytes().to_string()]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {

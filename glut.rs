@@ -123,7 +123,7 @@ pub fn set_window(window: Window) {
 
 pub fn set_window_title(_window: Window, title: &str) {
     unsafe {
-        let title = title.to_owned();
+        let title = title.to_string();
         title.to_c_str().with_ref(|bytes| {
             glutSetWindowTitle(bytes as *c_char);
         });
