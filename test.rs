@@ -26,7 +26,7 @@ use std::comm;
 use std::io::println;
 use std::task;
 
-fn fragment_shader_source() -> ~str {
+fn fragment_shader_source() -> String {
     "
     #ifdef GLES2
         precision mediump float;
@@ -38,7 +38,7 @@ fn fragment_shader_source() -> ~str {
     ".to_string()
 }
 
-fn vertex_shader_source() -> ~str {
+fn vertex_shader_source() -> String {
     "
         attribute vec3 aVertexPosition;
 
@@ -52,9 +52,9 @@ fn vertex_shader_source() -> ~str {
     ".to_string()
 }
 
-fn load_shader(source_str: ~str, shader_type: GLenum) -> GLuint {
+fn load_shader(source_str: String, shader_type: GLenum) -> GLuint {
     let shader_id = create_shader(shader_type);
-    shader_source(shader_id, [source_str.as_bytes().to_string()]);
+    shader_source(shader_id, [source_str.as_bytes()]);
     compile_shader(shader_id);
 
     if get_error() != NO_ERROR {
