@@ -72,15 +72,15 @@ pub trait ReshapeCallback { fn call(&self, x: c_int, y: c_int); }
 pub trait IdleCallback { fn call(&self); }
 pub trait MouseWheelCallback { fn call(&self, wheel: c_int, direction: c_int, x: c_int, y: c_int); }
 
-local_data_key!(display_tls_key: Box<DisplayCallback:'static>)
-local_data_key!(keyboard_tls_key: Box<KeyboardCallback:'static>)
-local_data_key!(mouse_tls_key: Box<MouseCallback:'static>)
-local_data_key!(motion_tls_key: Box<MotionCallback:'static>)
-local_data_key!(passive_motion_tls_key: Box<PassiveMotionCallback:'static>)
-local_data_key!(timer_tls_key: Box<TimerCallback:'static>)
-local_data_key!(reshape_tls_key: Box<ReshapeCallback:'static>)
-local_data_key!(idle_tls_key: Box<IdleCallback:'static>)
-local_data_key!(mouse_wheel_tls_key: Box<MouseWheelCallback:'static>)
+local_data_key!(display_tls_key: Box<DisplayCallback + 'static>)
+local_data_key!(keyboard_tls_key: Box<KeyboardCallback + 'static>)
+local_data_key!(mouse_tls_key: Box<MouseCallback + 'static>)
+local_data_key!(motion_tls_key: Box<MotionCallback + 'static>)
+local_data_key!(passive_motion_tls_key: Box<PassiveMotionCallback + 'static>)
+local_data_key!(timer_tls_key: Box<TimerCallback + 'static>)
+local_data_key!(reshape_tls_key: Box<ReshapeCallback + 'static>)
+local_data_key!(idle_tls_key: Box<IdleCallback + 'static>)
+local_data_key!(mouse_wheel_tls_key: Box<MouseWheelCallback + 'static>)
 
 pub enum State {
     WindowWidth,
@@ -146,7 +146,7 @@ pub extern "C" fn display_callback() {
     });
 }
 
-pub fn display_func(callback: Box<DisplayCallback:'static>) {
+pub fn display_func(callback: Box<DisplayCallback + 'static>) {
     display_tls_key.replace(Some(callback));
     unsafe {
         glutDisplayFunc(display_callback);
@@ -159,7 +159,7 @@ pub extern "C" fn keyboard_callback(key: c_uchar, x: c_int, y: c_int) {
     });
 }
 
-pub fn keyboard_func(callback: Box<KeyboardCallback:'static>) {
+pub fn keyboard_func(callback: Box<KeyboardCallback + 'static>) {
     keyboard_tls_key.replace(Some(callback));
     unsafe {
         glutKeyboardFunc(keyboard_callback);
@@ -172,7 +172,7 @@ pub extern "C" fn mouse_callback(button: c_int, state: c_int, x: c_int, y: c_int
     });
 }
 
-pub fn mouse_func(callback: Box<MouseCallback:'static>) {
+pub fn mouse_func(callback: Box<MouseCallback + 'static>) {
     mouse_tls_key.replace(Some(callback));
     unsafe {
         glutMouseFunc(mouse_callback);
@@ -185,7 +185,7 @@ pub extern "C" fn motion_callback(x: c_int, y: c_int) {
     });
 }
 
-pub fn motion_func(callback: Box<MotionCallback:'static>) {
+pub fn motion_func(callback: Box<MotionCallback + 'static>) {
     motion_tls_key.replace(Some(callback));
     unsafe {
         glutMotionFunc(motion_callback);
@@ -198,7 +198,7 @@ pub extern "C" fn passive_motion_callback(x: c_int, y: c_int) {
         });
 }
 
-pub fn passive_motion_func(callback: Box<PassiveMotionCallback:'static>) {
+pub fn passive_motion_func(callback: Box<PassiveMotionCallback + 'static>) {
     passive_motion_tls_key.replace(Some(callback));
     unsafe {
         glutPassiveMotionFunc(passive_motion_callback);
@@ -211,7 +211,7 @@ pub extern "C" fn timer_callback(_index: int) {
         });
 }
 
-pub fn timer_func(msecs: u32, callback: Box<TimerCallback:'static>) {
+pub fn timer_func(msecs: u32, callback: Box<TimerCallback + 'static>) {
     timer_tls_key.replace(Some(callback));
     unsafe {
         glutTimerFunc(msecs, timer_callback, 0);
@@ -224,7 +224,7 @@ pub extern "C" fn reshape_callback(width: c_int, height: c_int) {
         });
 }
 
-pub fn reshape_func(_window: Window, callback: Box<ReshapeCallback:'static>) {
+pub fn reshape_func(_window: Window, callback: Box<ReshapeCallback + 'static>) {
     reshape_tls_key.replace(Some(callback));
     unsafe {
         glutReshapeFunc(reshape_callback);
@@ -237,7 +237,7 @@ pub extern "C" fn idle_callback() {
         });
 }
 
-pub fn idle_func(callback: Box<IdleCallback:'static>) {
+pub fn idle_func(callback: Box<IdleCallback + 'static>) {
     idle_tls_key.replace(Some(callback));
     unsafe {
         glutIdleFunc(idle_callback);
@@ -257,7 +257,7 @@ pub extern "C" fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int,
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
-pub fn mouse_wheel_func(callback: Box<MouseWheelCallback:'static>) {
+pub fn mouse_wheel_func(callback: Box<MouseWheelCallback + 'static>) {
     mouse_wheel_tls_key.replace(Some(callback));
     unsafe {
         glutMouseWheelFunc(mouse_wheel_callback);
@@ -265,7 +265,7 @@ pub fn mouse_wheel_func(callback: Box<MouseWheelCallback:'static>) {
 }
 
 #[cfg(target_os="macos")]
-pub fn mouse_wheel_func(callback: Box<MouseWheelCallback:'static>) {
+pub fn mouse_wheel_func(callback: Box<MouseWheelCallback + 'static>) {
         mouse_wheel_tls_key.replace(Some(callback));
 }
 
