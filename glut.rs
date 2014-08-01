@@ -11,7 +11,7 @@
 
 use libc::{c_int, c_uint, c_uchar, c_char};
 use std::mem;
-use std::ptr::null;
+use std::ptr;
 
 /* FIXME: global variable glutStrokeRoman */
 
@@ -89,21 +89,17 @@ pub enum State {
 
 pub fn init() { 
     unsafe {
-        let argc = 0 as c_int;
-        let glut = "glut";
-        glut.to_c_str().with_ref(|command| {
-            let argv: (*u8, *u8) = (command as *u8, null());
-            let argv_p = mem::transmute(&argv);
-            glutInit(&argc, argv_p);
-        });
+        let mut argc = 0 as c_int;
+        let mut glut = "glut".to_c_str();
+        let argv: (*mut u8, *mut u8) = (glut.as_mut_ptr() as *mut u8, ptr::mut_null());
+        let argv_p: *mut *mut i8 = mem::transmute(&argv);
+        glutInit(&mut argc, argv_p);
     }
 }
 
 pub fn create_window(name: String) -> Window {
     unsafe {
-        name.to_c_str().with_ref(|bytes| {
-            Window(glutCreateWindow(bytes as *c_char))
-        })
+        Window(glutCreateWindow(name.to_c_str().as_ptr()))
     }
 }
 
@@ -124,9 +120,7 @@ pub fn set_window(window: Window) {
 pub fn set_window_title(_window: Window, title: &str) {
     unsafe {
         let title = title.to_string();
-        title.to_c_str().with_ref(|bytes| {
-            glutSetWindowTitle(bytes as *c_char);
-        });
+        glutSetWindowTitle(title.to_c_str().as_ptr())
     }
 }
 
@@ -326,7 +320,7 @@ pub fn init_window_size(width:uint, height:uint) {
 }
 
 #[cfg(target_os="android")]
-#[link(name="android-glue")]
+#[link(name="android-glue", kind="static")]
 extern {}
 
 #[cfg(target_os="macos")]
@@ -349,12 +343,12 @@ extern {
 
 extern {
 
-pub fn glutInit(argcp: *c_int, argv: **c_char);
+pub fn glutInit(argcp: *mut c_int, argv: *mut *mut c_char);
 
 pub fn glutInitDisplayMode(mode: c_uint);
 
 #[cfg(not(target_os="android"))]
-pub fn glutInitDisplayString(string: *c_char);
+pub fn glutInitDisplayString(string: *const c_char);
 
 #[cfg(not(target_os="android"))]
 pub fn glutInitWindowPosition(x: c_int, y: c_int);
@@ -364,7 +358,7 @@ pub fn glutInitWindowSize(width: c_int, height: c_int);
 #[cfg(not(target_os="android"))]
 pub fn glutMainLoop();
 
-pub fn glutCreateWindow(title: *c_char) -> c_int;
+pub fn glutCreateWindow(title: *const c_char) -> c_int;
 
 #[cfg(not(target_os="android"))]
 pub fn glutCreateSubWindow(win: c_int, x: c_int, y: c_int, width: c_int, height: c_int) -> c_int;
@@ -382,10 +376,10 @@ pub fn glutGetWindow() -> c_int;
 
 pub fn glutSetWindow(win: c_int);
 
-pub fn glutSetWindowTitle(title: *c_char);
+pub fn glutSetWindowTitle(title: *const c_char);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSetIconTitle(title: *c_char);
+pub fn glutSetIconTitle(title: *const c_char);
 
 #[cfg(not(target_os="android"))]
 pub fn glutPositionWindow(x: c_int, y: c_int);
@@ -438,7 +432,7 @@ pub fn glutShowOverlay();
 pub fn glutHideOverlay();
 
 #[cfg(not(target_os="android"))]
-pub fn glutCreateMenu(arg1: *u8) -> c_int;
+pub fn glutCreateMenu(arg1: *const u8) -> c_int;
 
 #[cfg(not(target_os="android"))]
 pub fn glutDestroyMenu(menu: c_int);
@@ -450,16 +444,16 @@ pub fn glutGetMenu() -> c_int;
 pub fn glutSetMenu(menu: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutAddMenuEntry(label: *c_char, value: c_int);
+pub fn glutAddMenuEntry(label: *const c_char, value: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutAddSubMenu(label: *c_char, submenu: c_int);
+pub fn glutAddSubMenu(label: *const c_char, submenu: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutChangeToMenuEntry(item: c_int, label: *c_char, value: c_int);
+pub fn glutChangeToMenuEntry(item: c_int, label: *const c_char, value: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutChangeToSubMenu(item: c_int, label: *c_char, submenu: c_int);
+pub fn glutChangeToSubMenu(item: c_int, label: *const c_char, submenu: c_int);
 
 #[cfg(not(target_os="android"))]
 pub fn glutRemoveMenuItem(item: c_int);
@@ -487,59 +481,59 @@ pub fn glutMotionFunc(func: extern "C" fn(i32, i32));
 pub fn glutPassiveMotionFunc(func: extern "C" fn(i32, i32));
 
 #[cfg(not(target_os="android"))]
-pub fn glutEntryFunc(func: *u8);
+pub fn glutEntryFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutVisibilityFunc(func: *u8);
+pub fn glutVisibilityFunc(func: *const u8);
 
 pub fn glutIdleFunc(func: extern "C" fn());
 
 pub fn glutTimerFunc(millis: c_uint, func: extern "C" fn(int), value: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutMenuStateFunc(func: *u8);
+pub fn glutMenuStateFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSpecialFunc(func: *u8);
+pub fn glutSpecialFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSpaceballMotionFunc(func: *u8);
+pub fn glutSpaceballMotionFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSpaceballRotateFunc(func: *u8);
+pub fn glutSpaceballRotateFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSpaceballButtonFunc(func: *u8);
+pub fn glutSpaceballButtonFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutButtonBoxFunc(func: *u8);
+pub fn glutButtonBoxFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutDialsFunc(func: *u8);
+pub fn glutDialsFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutTabletMotionFunc(func: *u8);
+pub fn glutTabletMotionFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutTabletButtonFunc(func: *u8);
+pub fn glutTabletButtonFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutMenuStatusFunc(func: *u8);
+pub fn glutMenuStatusFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutOverlayDisplayFunc(func: *u8);
+pub fn glutOverlayDisplayFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutWindowStatusFunc(func: *u8);
+pub fn glutWindowStatusFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutKeyboardUpFunc(func: *u8);
+pub fn glutKeyboardUpFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutSpecialUpFunc(func: *u8);
+pub fn glutSpecialUpFunc(func: *const u8);
 
 #[cfg(not(target_os="android"))]
-pub fn glutJoystickFunc(func: *u8, pollInterval: c_int);
+pub fn glutJoystickFunc(func: *const u8, pollInterval: c_int);
 
 #[cfg(not(target_os="android"))]
 pub fn glutSetColor(arg1: c_int, red: GLfloat, green: GLfloat, blue: GLfloat);
@@ -556,7 +550,7 @@ pub fn glutGet(_type: GLenum) -> c_int;
 pub fn glutDeviceGet(_type: GLenum) -> c_int;
 
 #[cfg(not(target_os="android"))]
-pub fn glutExtensionSupported(name: *c_char) -> c_int;
+pub fn glutExtensionSupported(name: *const c_char) -> c_int;
 
 pub fn glutGetModifiers() -> c_int;
 
@@ -564,25 +558,25 @@ pub fn glutGetModifiers() -> c_int;
 pub fn glutLayerGet(_type: GLenum) -> c_int;
 
 #[cfg(not(target_os="android"))]
-pub fn glutGetProcAddress(procName: *c_char) -> *c_void;
+pub fn glutGetProcAddress(procName: *const c_char) -> *const c_void;
 
 #[cfg(not(target_os="android"))]
-pub fn glutBitmapCharacter(font: *c_void, character: c_int);
+pub fn glutBitmapCharacter(font: *mut c_void, character: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutBitmapWidth(font: *c_void, character: c_int) -> c_int;
+pub fn glutBitmapWidth(font: *mut c_void, character: c_int) -> c_int;
 
 #[cfg(not(target_os="android"))]
-pub fn glutStrokeCharacter(font: *c_void, character: c_int);
+pub fn glutStrokeCharacter(font: *mut c_void, character: c_int);
 
 #[cfg(not(target_os="android"))]
-pub fn glutStrokeWidth(font: *c_void, character: c_int) -> c_int;
+pub fn glutStrokeWidth(font: *mut c_void, character: c_int) -> c_int;
 
 #[cfg(not(target_os="android"))]
-pub fn glutBitmapLength(font: *c_void, string: *c_uchar) -> c_int;
+pub fn glutBitmapLength(font: *mut c_void, string: *const c_uchar) -> c_int;
 
 #[cfg(not(target_os="android"))]
-pub fn glutStrokeLength(font: *c_void, string: *c_uchar) -> c_int;
+pub fn glutStrokeLength(font: *mut c_void, string: *const c_uchar) -> c_int;
 
 #[cfg(not(target_os="android"))]
 pub fn glutWireSphere(radius: GLdouble, slices: GLint, stacks: GLint);
@@ -666,7 +660,7 @@ pub fn glutSetKeyRepeat(repeatMode: c_int);
 pub fn glutForceJoystickFunc();
 
 #[cfg(not(target_os="android"))]
-pub fn glutGameModeString(string: *c_char);
+pub fn glutGameModeString(string: *const c_char);
 
 #[cfg(not(target_os="android"))]
 pub fn glutEnterGameMode() -> c_int;

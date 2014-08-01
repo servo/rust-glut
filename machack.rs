@@ -15,7 +15,7 @@ use machack::cocoa::base::{sel_registerName};
 extern {
     // Carbon API.
     #[fast_ffi]
-    fn GetEventKind(eventRef: *c_void) -> u32;
+    fn GetEventKind(eventRef: *const c_void) -> u32;
 }
 
 // From CarbonEvents.h.
@@ -25,7 +25,7 @@ extern fn scrollWheelImpl(_this: id, _cmd: SEL, event: id) {
     unsafe {
         // Get the underlying Carbon event to figure out if deviceDelta{Y,X} are available.
         let sel__eventRef = sel_registerName(transmute(&"_eventRef"[0]));
-        let eventRef: *c_void = transmute(msg_send_id(event, sel__eventRef));
+        let eventRef: *const c_void = transmute(msg_send_id(event, sel__eventRef));
         let is_scroll = eventRef != null() && GetEventKind(eventRef) == kEventMouseScroll;
 
         // Use precise scrolling if available; otherwise, use coarse-grained scrolling.
