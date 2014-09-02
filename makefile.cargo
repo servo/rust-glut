@@ -1,0 +1,30 @@
+ifeq (androideabi,$(findstring androideabi,$(TARGET)))
+
+CC := $(TARGET)-g++
+AR := $(TARGET)-ar
+
+else
+
+CC ?= gcc
+AR ?= ar
+
+endif
+
+CFLAGS ?=
+
+.PHONY: all
+ifeq (androideabi,$(findstring androideabi,$(TARGET)))
+
+all: $(OUT_DIR)/libandroid-glue.a
+
+$(OUT_DIR)/libandroid-glue.a: $(OUT_DIR)/android-glue.o
+	$(AR) rcs $@ $^
+
+$(OUT_DIR)/android-glue.o: src/android-glue.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+else
+
+all:
+
+endif
