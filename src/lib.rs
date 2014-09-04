@@ -7,22 +7,15 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![crate_name = "glut"]
-#![crate_type = "rlib"]
-
 #![feature(macro_rules)]
 
 extern crate libc;
 extern crate std;
+extern crate opengles;
 
+#[cfg(target_os="android")]
 pub mod glut;
 
-#[cfg(target_os="macos")]
-pub mod machack;
-#[cfg(not(target_os="macos"))]
-#[path="machackstub.rs"]
-pub mod machack;
-
-#[cfg(test)]
+#[cfg(test,target_os="android")]
 pub mod test;
 

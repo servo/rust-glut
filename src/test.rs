@@ -7,19 +7,18 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-extern crate opengles = "rust-opengles";   // FIXME: Should only be for tests.
 use glut::{swap_buffers, GLint};
-use self::opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
-use self::opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
-use self::opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLenum};
-use self::opengles::gl2::{GLsizei, GLuint, attach_shader, bind_buffer};
-use self::opengles::gl2::{buffer_data, create_program, clear, clear_color};
-use self::opengles::gl2::{compile_shader, create_shader, draw_arrays};
-use self::opengles::gl2::{enable_vertex_attrib_array, gen_buffers};
-use self::opengles::gl2::{get_attrib_location, get_error, get_program_iv};
-use self::opengles::gl2::{get_shader_info_log, get_shader_iv};
-use self::opengles::gl2::{link_program, shader_source};
-use self::opengles::gl2::{use_program, vertex_attrib_pointer_f32};
+use opengles::gl2::{ARRAY_BUFFER, COLOR_BUFFER_BIT, COMPILE_STATUS};
+use opengles::gl2::{FRAGMENT_SHADER, LINK_STATUS, NO_ERROR, STATIC_DRAW};
+use opengles::gl2::{TRIANGLE_STRIP, VERTEX_SHADER, GLenum};
+use opengles::gl2::{GLsizei, GLuint, attach_shader, bind_buffer};
+use opengles::gl2::{buffer_data, create_program, clear, clear_color};
+use opengles::gl2::{compile_shader, create_shader, draw_arrays};
+use opengles::gl2::{enable_vertex_attrib_array, gen_buffers};
+use opengles::gl2::{get_attrib_location, get_error, get_program_iv};
+use opengles::gl2::{get_shader_info_log, get_shader_iv};
+use opengles::gl2::{link_program, shader_source};
+use opengles::gl2::{use_program, vertex_attrib_pointer_f32};
 
 use libc::c_int;
 use std::comm;
