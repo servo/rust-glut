@@ -1,6 +1,6 @@
 ifeq (androideabi,$(findstring androideabi,$(TARGET)))
 
-CC := $(TARGET)-g++
+CC := $(TARGET)-gcc
 AR := $(TARGET)-ar
 
 else
