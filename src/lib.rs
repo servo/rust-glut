@@ -10,7 +10,6 @@
 #![feature(macro_rules)]
 
 extern crate libc;
-extern crate std;
 extern crate opengles;
 
 #[cfg(target_os="android")]
