@@ -15,6 +15,6 @@ extern crate opengles;
 #[cfg(target_os="android")]
 pub mod glut;
 
-#[cfg(test,target_os="android")]
+#[cfg(all(test,target_os="android"))]
 pub mod test;
 
