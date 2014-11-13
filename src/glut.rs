@@ -87,11 +87,11 @@ pub enum State {
     WindowHeight
 }
 
-pub fn init() { 
+pub fn init() {
     unsafe {
         let mut argc = 0 as c_int;
         let mut glut = "glut".to_c_str();
-        let argv: (*mut u8, *mut u8) = (glut.as_mut_ptr() as *mut u8, ptr::mut_null());
+        let argv: (*mut u8, *mut u8) = (glut.as_mut_ptr() as *mut u8, ptr::null_mut());
         let argv_p: *mut *mut i8 = mem::transmute(&argv);
         glutInit(&mut argc, argv_p);
     }
