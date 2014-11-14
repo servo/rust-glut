@@ -38,29 +38,29 @@ pub type GLdouble = f64;
 
 pub struct Window(pub c_int);
 
-pub static DOUBLE: c_uint = 2 as c_uint;
+pub const DOUBLE: c_uint = 2 as c_uint;
 
-pub static ACTIVE_SHIFT: c_int = 1;
-pub static ACTIVE_CTRL: c_int = 2;
-pub static ACTIVE_ALT: c_int = 4;
+pub const ACTIVE_SHIFT: c_int = 1;
+pub const ACTIVE_CTRL: c_int = 2;
+pub const ACTIVE_ALT: c_int = 4;
 
 // mouse buttons
-pub static LEFT_BUTTON: c_int = 0;
-pub static MIDDLE_BUTTON: c_int = 1;
-pub static RIGHT_BUTTON: c_int = 2;
+pub const LEFT_BUTTON: c_int = 0;
+pub const MIDDLE_BUTTON: c_int = 1;
+pub const RIGHT_BUTTON: c_int = 2;
 
 // mouse button callback state
-pub static MOUSE_DOWN: c_int = 0;
-pub static MOUSE_UP: c_int = 1;
+pub const MOUSE_DOWN: c_int = 0;
+pub const MOUSE_UP: c_int = 1;
 
-static WINDOW_WIDTH: GLenum = 102;
-static WINDOW_HEIGHT: GLenum = 103;
+const WINDOW_WIDTH: GLenum = 102;
+const WINDOW_HEIGHT: GLenum = 103;
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
-pub static HAVE_PRECISE_MOUSE_WHEEL: bool = false;
+pub const HAVE_PRECISE_MOUSE_WHEEL: bool = false;
 #[cfg(target_os="macos")]
-pub static HAVE_PRECISE_MOUSE_WHEEL: bool = true;
+pub const HAVE_PRECISE_MOUSE_WHEEL: bool = true;
 
 pub trait DisplayCallback { fn call(&self); }
 pub trait KeyboardCallback { fn call(&self, key: c_uchar, x: c_int, y: c_int); }
@@ -241,16 +241,14 @@ pub fn idle_func(callback: Box<IdleCallback + 'static>) {
 // Mouse wheel handling.
 //
 // This is not part of the standard, but it's supported by freeglut and our Mac hack.
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os="android"))]
 pub extern "C" fn mouse_wheel_callback(wheel: c_int, direction: c_int, x: c_int, y: c_int) {
     mouse_wheel_tls_key.get().as_ref().map(|&ref cb| {
         cb.call(wheel, direction, x, y);
     });
 }
 
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os="android"))]
 pub fn mouse_wheel_func(callback: Box<MouseWheelCallback + 'static>) {
     mouse_wheel_tls_key.replace(Some(callback));
     unsafe {
@@ -270,8 +268,7 @@ pub fn check_loop() {
     }
 }
 
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os="android"))]
 pub fn check_loop() {
     unsafe {
         glutMainLoopEvent();
@@ -334,8 +331,7 @@ extern {
 #[link(name="glut")]
 extern {}
 
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os="android"))]
 extern {
     // freeglut extension.
     fn glutMainLoopEvent();
@@ -472,8 +468,7 @@ pub fn glutKeyboardFunc(func: extern "C" fn(u8, i32, i32));
 
 pub fn glutMouseFunc(func: extern "C" fn(i32, i32, i32, i32));
 
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os="android"))]
 pub fn glutMouseWheelFunc(func: extern "C" fn(i32, i32, i32, i32));
 
 pub fn glutMotionFunc(func: extern "C" fn(i32, i32));
